@@ -1,0 +1,264 @@
+.app {
+  min-height: 100vh;
+  background: #f5f9fc;
+  color: #102a43;
+}
+
+.navbar {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #0b4f71;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.brand-icon {
+  font-size: 1.45rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-links button,
+.login-button {
+  border: none;
+  background: transparent;
+  color: #36566c;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 10px 12px;
+}
+
+.nav-links button:hover {
+  color: #087e8b;
+}
+
+.login-button {
+  border: 1px solid #b7d1df;
+  border-radius: 8px;
+  color: #0b4f71;
+  font-weight: 700;
+}
+
+.login-button:hover {
+  background: #e7f4f8;
+}
+
+.hero {
+  width: min(1180px, calc(100% - 48px));
+  margin: 42px auto 0;
+  padding: 72px;
+  border-radius: 24px;
+  display: grid;
+  grid-template-columns: 1.35fr 0.85fr;
+  gap: 56px;
+  align-items: center;
+  background:
+    radial-gradient(circle at top right, rgba(54, 194, 200, 0.3), transparent 32%),
+    linear-gradient(135deg, #073b4c, #0b6174);
+  color: white;
+  box-shadow: 0 24px 50px rgba(7, 59, 76, 0.2);
+}
+
+.eyebrow,
+.section-label {
+  margin: 0 0 14px;
+  color: #87e6e8;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.hero h1 {
+  max-width: 650px;
+  margin: 0;
+  font-size: clamp(2.5rem, 5vw, 4.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.055em;
+}
+
+.hero-text {
+  max-width: 630px;
+  margin: 24px 0 0;
+  color: #d4eff2;
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.primary-button,
+.secondary-button {
+  border: none;
+  border-radius: 9px;
+  padding: 14px 19px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primary-button {
+  background: #f9c74f;
+  color: #163040;
+}
+
+.primary-button:hover {
+  background: #ffd76f;
+  transform: translateY(-1px);
+}
+
+.secondary-button {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+}
+
+.secondary-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.hero-card {
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: rgba(249, 199, 79, 0.2);
+  font-size: 1.45rem;
+}
+
+.hero-card h2 {
+  margin: 22px 0 10px;
+  font-size: 1.55rem;
+}
+
+.hero-card p {
+  margin: 0;
+  color: #d4eff2;
+  line-height: 1.65;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 24px;
+  color: #d9f9f5;
+  font-size: 0.82rem;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #75e6a2;
+  box-shadow: 0 0 0 5px rgba(117, 230, 162, 0.15);
+}
+
+.features-section {
+  width: min(1180px, calc(100% - 48px));
+  margin: 88px auto;
+}
+
+.section-label {
+  color: #087e8b;
+}
+
+.features-section h2 {
+  margin: 0;
+  color: #102a43;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  letter-spacing: -0.04em;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 32px;
+}
+
+.feature-card {
+  min-height: 200px;
+  padding: 28px;
+  border: 1px solid #d8e6ec;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 10px 25px rgba(16, 42, 67, 0.05);
+}
+
+.feature-card span {
+  color: #087e8b;
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.feature-card h3 {
+  margin: 34px 0 10px;
+  color: #102a43;
+  font-size: 1.2rem;
+}
+
+.feature-card p {
+  margin: 0;
+  color: #5d7384;
+  line-height: 1.65;
+}
+
+@media (max-width: 850px) {
+  .navbar {
+    width: min(100% - 32px, 1180px);
+    flex-wrap: wrap;
+  }
+
+  .nav-links {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .hero {
+    width: min(100% - 32px, 1180px);
+    padding: 40px 28px;
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+
+  .features-section {
+    width: min(100% - 32px, 1180px);
+    margin: 56px auto;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
