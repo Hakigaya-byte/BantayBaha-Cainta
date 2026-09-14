@@ -3,7 +3,9 @@ import type { FloodReport, ReportStatus } from './report'
 
 type AdminDashboardProps = {
   reports: FloodReport[]
+  staffEmail: string
   onBack: () => void
+  onLogout: () => Promise<void>
   onUpdateStatus: (reportId: string, newStatus: ReportStatus) => Promise<void>
 }
 
@@ -17,7 +19,9 @@ const statusOptions: ReportStatus[] = [
 
 function AdminDashboard({
   reports,
+  staffEmail,
   onBack,
+  onLogout,
   onUpdateStatus,
 }: AdminDashboardProps) {
   const [selectedStatus, setSelectedStatus] = useState<'All' | ReportStatus>('All')
@@ -48,14 +52,19 @@ function AdminDashboard({
               ← Back to Home
             </button>
 
-            <p className="eyebrow report-eyebrow">DRRMO STAFF DEMO</p>
+            <p className="eyebrow report-eyebrow">DRRMO STAFF DASHBOARD</p>
             <h1>Flood report dashboard</h1>
             <p>
               Review submitted reports and update their current status.
             </p>
           </div>
 
-          <div className="admin-badge">Admin Mode</div>
+          <div className="admin-actions">
+            <span className="admin-email">{staffEmail}</span>
+            <button className="logout-button" type="button" onClick={() => void onLogout()}>
+              Log out
+            </button>
+          </div>
         </div>
 
         <div className="summary-grid">

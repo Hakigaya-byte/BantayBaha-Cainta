@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
+import { onAuthStateChanged, signOut, type User } from 'firebase/auth'
 import './App.css'
 import AdminDashboard from './AdminDashboard'
+import AdminLogin from './AdminLogin'
 import MyReports from './MyReports'
 import ReportFlood from './pages/ReportFlood'
+import { auth } from './firebase'
 import type {
   FloodReport,
   FloodReportInput,
@@ -15,15 +18,25 @@ import {
   updateFloodReportStatus,
 } from './firestoreReports'
 
-type ActivePage = 'home' | 'report' | 'my-reports' | 'admin'
+type ActivePage = 'home' | 'report' | 'my-reports' | 'admin' | 'admin-login'
+
+const configuredAdminEmail = import.meta.env.VITE_ADMIN_EMAIL?.trim().toLowerCase()
 
 function App() {
   const [activePage, setActivePage] = useState<ActivePage>('home')
   const [reports, setReports] = useState<FloodReport[]>([])
   const [reportsError, setReportsError] = useState('')
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
 
   const residentId = useMemo(() => getCurrentResidentId(), [])
   const myReports = reports.filter((report) => report.residentId === residentId)
+  const isAdmin =
+    Boolean(currentUser?.email) &&
+    currentUser?.email?.toLowerCase() === configuredAdminEmail
+
+  useEffect(() => {
+    return onAuthStateChanged(auth, setCurrentUser)
+  }, [])
 
   useEffect(() => {
     const unsubscribe = subscribeToFloodReports(
@@ -52,6 +65,17 @@ function App() {
     await updateFloodReportStatus(reportId, newStatus)
   }
 
+  function handleAdminLoginSuccess(user: User) {
+    setCurrentUser(user)
+    setActivePage('admin')
+  }
+
+  async function handleLogout() {
+    await signOut(auth)
+    setCurrentUser(null)
+    setActivePage('home')
+  }
+
   if (activePage === 'report') {
     return (
       <ReportFlood
@@ -70,11 +94,31 @@ function App() {
     )
   }
 
+  if (activePage === 'admin-login') {
+    return (
+      <AdminLogin
+        onBack={() => setActivePage('home')}
+        onLoginSuccess={handleAdminLoginSuccess}
+      />
+    )
+  }
+
   if (activePage === 'admin') {
+    if (!isAdmin || !currentUser?.email) {
+      return (
+        <AdminLogin
+          onBack={() => setActivePage('home')}
+          onLoginSuccess={handleAdminLoginSuccess}
+        />
+      )
+    }
+
     return (
       <AdminDashboard
         reports={reports}
+        staffEmail={currentUser.email}
         onBack={() => setActivePage('home')}
+        onLogout={handleLogout}
         onUpdateStatus={handleStatusUpdate}
       />
     )
@@ -105,9 +149,9 @@ function App() {
         <button
           className="login-button"
           type="button"
-          onClick={() => setActivePage('admin')}
+          onClick={() => setActivePage(isAdmin ? 'admin' : 'admin-login')}
         >
-          Admin Demo
+          {isAdmin ? 'Staff Dashboard' : 'Staff Login'}
         </button>
       </nav>
 

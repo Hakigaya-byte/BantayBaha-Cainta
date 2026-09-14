@@ -709,3 +709,55 @@
     width: 100%;
   }
 }
+
+.firebase-error,
+.form-error {
+  color: #b42318;
+  margin: 1rem auto;
+  max-width: 880px;
+}
+
+.admin-login-card {
+  max-width: 540px;
+}
+
+.admin-login-note {
+  margin-top: 22px;
+  color: #527184;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.admin-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.admin-email {
+  color: #527184;
+  font-size: 0.85rem;
+}
+
+.logout-button {
+  border: 1px solid #c6d9e2;
+  border-radius: 8px;
+  background: white;
+  color: #0c4a5d;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 10px 14px;
+}
+
+.logout-button:hover {
+  background: #edf7fa;
+}
+
+@media (max-width: 760px) {
+  .admin-actions {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+}
