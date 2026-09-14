@@ -538,3 +538,174 @@
     gap: 12px;
   }
 }
+
+.admin-page {
+  min-height: 100vh;
+  padding: 56px 24px;
+  background: #eef6f8;
+}
+
+.admin-dashboard {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+}
+
+.admin-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 38px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top right, rgba(135, 230, 232, 0.25), transparent 34%),
+    linear-gradient(135deg, #073b4c, #0b6174);
+  color: white;
+  box-shadow: 0 18px 45px rgba(7, 59, 76, 0.18);
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  letter-spacing: -0.045em;
+}
+
+.admin-header p {
+  max-width: 600px;
+  margin: 12px 0 0;
+  color: #d4eff2;
+  line-height: 1.65;
+}
+
+.admin-header .back-button {
+  color: #a7f1f2;
+}
+
+.admin-badge {
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 9px 13px;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 24px 0 34px;
+}
+
+.summary-card {
+  padding: 22px;
+  border: 1px solid #d8e6ec;
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 8px 20px rgba(16, 42, 67, 0.05);
+}
+
+.summary-card span {
+  display: block;
+  color: #5d7384;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.summary-card strong {
+  display: block;
+  margin-top: 10px;
+  color: #0b4f71;
+  font-size: 2rem;
+}
+
+.dashboard-toolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.dashboard-toolbar h2 {
+  margin: 0;
+  color: #102a43;
+  font-size: 1.65rem;
+}
+
+.dashboard-toolbar p {
+  margin: 6px 0 0;
+  color: #5d7384;
+}
+
+.filter-control,
+.admin-status-control {
+  display: grid;
+  gap: 7px;
+  color: #173f55;
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.filter-control select,
+.admin-status-control select {
+  min-width: 170px;
+  border: 1px solid #bdd3dd;
+  border-radius: 8px;
+  background: white;
+  color: #102a43;
+  font: inherit;
+  padding: 10px 12px;
+}
+
+.admin-report-list {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-report-card {
+  padding: 26px;
+  border: 1px solid #d8e6ec;
+  border-radius: 15px;
+  background: white;
+  box-shadow: 0 8px 20px rgba(16, 42, 67, 0.05);
+}
+
+.admin-status-control {
+  width: fit-content;
+  margin-top: 22px;
+}
+
+@media (max-width: 760px) {
+  .admin-page {
+    padding: 28px 16px;
+  }
+
+  .admin-header {
+    flex-direction: column;
+    padding: 30px 24px;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 440px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-control,
+  .filter-control select,
+  .admin-status-control,
+  .admin-status-control select {
+    width: 100%;
+  }
+}

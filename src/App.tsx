@@ -1,10 +1,15 @@
 import { useState } from 'react'
 import './App.css'
+import AdminDashboard from './AdminDashboard'
 import MyReports from './MyReports'
 import ReportFlood from './pages/ReportFlood'
-import type { FloodReport, FloodReportInput } from './report'
+import type {
+  FloodReport,
+  FloodReportInput,
+  ReportStatus,
+} from './report'
 
-type ActivePage = 'home' | 'report' | 'my-reports'
+type ActivePage = 'home' | 'report' | 'my-reports' | 'admin'
 
 function App() {
   const [activePage, setActivePage] = useState<ActivePage>('home')
@@ -23,6 +28,19 @@ function App() {
     setReports((currentReports) => [newReport, ...currentReports])
   }
 
+  function handleStatusUpdate(
+    reportId: string,
+    newStatus: ReportStatus,
+  ) {
+    setReports((currentReports) =>
+      currentReports.map((report) =>
+        report.id === reportId
+          ? { ...report, status: newStatus }
+          : report,
+      ),
+    )
+  }
+
   if (activePage === 'report') {
     return (
       <ReportFlood
@@ -37,6 +55,16 @@ function App() {
       <MyReports
         reports={reports}
         onBack={() => setActivePage('home')}
+      />
+    )
+  }
+
+  if (activePage === 'admin') {
+    return (
+      <AdminDashboard
+        reports={reports}
+        onBack={() => setActivePage('home')}
+        onUpdateStatus={handleStatusUpdate}
       />
     )
   }
@@ -63,8 +91,12 @@ function App() {
           <button type="button">Emergency Contacts</button>
         </div>
 
-        <button className="login-button" type="button">
-          Login
+        <button
+          className="login-button"
+          type="button"
+          onClick={() => setActivePage('admin')}
+        >
+          Admin Demo
         </button>
       </nav>
 
