@@ -4,7 +4,7 @@ import type { FloodReport, ReportStatus } from './report'
 type AdminDashboardProps = {
   reports: FloodReport[]
   onBack: () => void
-  onUpdateStatus: (reportId: string, newStatus: ReportStatus) => void
+  onUpdateStatus: (reportId: string, newStatus: ReportStatus) => Promise<void>
 }
 
 const statusOptions: ReportStatus[] = [
@@ -142,12 +142,12 @@ function AdminDashboard({
                   Update report status
                   <select
                     value={report.status}
-                    onChange={(event) =>
-                      onUpdateStatus(
+                    onChange={(event) => {
+                      void onUpdateStatus(
                         report.id,
                         event.target.value as ReportStatus,
                       )
-                    }
+                    }}
                   >
                     {statusOptions.map((status) => (
                       <option key={status} value={status}>

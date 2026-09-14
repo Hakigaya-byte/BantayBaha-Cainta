@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import AdminDashboard from './AdminDashboard'
 import MyReports from './MyReports'
@@ -8,37 +8,48 @@ import type {
   FloodReportInput,
   ReportStatus,
 } from './report'
+import {
+  createFloodReport,
+  getCurrentResidentId,
+  subscribeToFloodReports,
+  updateFloodReportStatus,
+} from './firestoreReports'
 
 type ActivePage = 'home' | 'report' | 'my-reports' | 'admin'
 
 function App() {
   const [activePage, setActivePage] = useState<ActivePage>('home')
   const [reports, setReports] = useState<FloodReport[]>([])
+  const [reportsError, setReportsError] = useState('')
 
-  function handleReportSubmit(reportInput: FloodReportInput) {
-    const newReport: FloodReport = {
-      ...reportInput,
-      id: `RPT-${Date.now()}`,
-      residentId: 'sample-resident-id',
-      status: 'Submitted',
-      staffNote: '',
-      createdAt: new Date().toLocaleString(),
-    }
+  const residentId = useMemo(() => getCurrentResidentId(), [])
+  const myReports = reports.filter((report) => report.residentId === residentId)
 
-    setReports((currentReports) => [newReport, ...currentReports])
+  useEffect(() => {
+    const unsubscribe = subscribeToFloodReports(
+      (updatedReports) => {
+        setReports(updatedReports)
+        setReportsError('')
+      },
+      () => {
+        setReportsError(
+          'Firebase cannot load reports yet. Check that Cloud Firestore is enabled and its development rules allow this test app.',
+        )
+      },
+    )
+
+    return unsubscribe
+  }, [])
+
+  async function handleReportSubmit(reportInput: FloodReportInput) {
+    await createFloodReport(reportInput)
   }
 
-  function handleStatusUpdate(
+  async function handleStatusUpdate(
     reportId: string,
     newStatus: ReportStatus,
   ) {
-    setReports((currentReports) =>
-      currentReports.map((report) =>
-        report.id === reportId
-          ? { ...report, status: newStatus }
-          : report,
-      ),
-    )
+    await updateFloodReportStatus(reportId, newStatus)
   }
 
   if (activePage === 'report') {
@@ -53,7 +64,7 @@ function App() {
   if (activePage === 'my-reports') {
     return (
       <MyReports
-        reports={reports}
+        reports={myReports}
         onBack={() => setActivePage('home')}
       />
     )
@@ -144,11 +155,13 @@ function App() {
             <span>
               {reports.length === 0
                 ? 'Reports are reviewed by DRRMO staff'
-                : `${reports.length} temporary test report saved in this session`}
+                : `${reports.length} report(s) available for DRRMO review`}
             </span>
           </div>
         </div>
       </section>
+
+      {reportsError && <p className="firebase-error">{reportsError}</p>}
 
       <section className="features-section">
         <p className="section-label">HOW IT WORKS</p>

@@ -3,7 +3,7 @@ import type { FloodReportInput, FloodSeverity } from '../report'
 
 type ReportFloodProps = {
   onBack: () => void
-  onSubmitReport: (report: FloodReportInput) => void
+  onSubmitReport: (report: FloodReportInput) => Promise<void>
 }
 
 type FloodReportForm = {
@@ -25,6 +25,8 @@ const emptyForm: FloodReportForm = {
 function ReportFlood({ onBack, onSubmitReport }: ReportFloodProps) {
   const [form, setForm] = useState<FloodReportForm>(emptyForm)
   const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
   function updateField(field: keyof FloodReportForm, value: string) {
     setForm({
@@ -33,23 +35,34 @@ function ReportFlood({ onBack, onSubmitReport }: ReportFloodProps) {
     })
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    if (form.severity === '') {
+    if (form.severity === '' || isSubmitting) {
       return
     }
 
-    onSubmitReport({
-      barangay: form.barangay,
-      locationDetails: form.locationDetails,
-      severity: form.severity,
-      description: form.description,
-      photoName: form.photoName,
-    })
+    setIsSubmitting(true)
+    setSubmitError('')
 
-    setSubmitted(true)
-    setForm(emptyForm)
+    try {
+      await onSubmitReport({
+        barangay: form.barangay,
+        locationDetails: form.locationDetails,
+        severity: form.severity,
+        description: form.description,
+        photoName: form.photoName,
+      })
+
+      setSubmitted(true)
+      setForm(emptyForm)
+    } catch {
+      setSubmitError(
+        'Your report could not be saved yet. Please check the Firebase Firestore setup, then try again.',
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (submitted) {
@@ -61,7 +74,7 @@ function ReportFlood({ onBack, onSubmitReport }: ReportFloodProps) {
           <h1>Your flood report was saved.</h1>
           <p>
             This sample report currently has a <strong>Submitted</strong> status.
-            Later, Firebase will save it permanently in the database.
+            It is now saved in the Firebase database for this prototype.
           </p>
 
           <button className="primary-button" onClick={onBack}>
@@ -159,9 +172,11 @@ function ReportFlood({ onBack, onSubmitReport }: ReportFloodProps) {
             </small>
           </div>
 
-          <button className="primary-button submit-button" type="submit">
-            Submit Flood Report
+          <button className="primary-button submit-button" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Saving report...' : 'Submit Flood Report'}
           </button>
+
+          {submitError && <p className="form-error">{submitError}</p>}
         </form>
       </section>
     </main>

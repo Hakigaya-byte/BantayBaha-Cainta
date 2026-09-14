@@ -1,4 +1,4 @@
-import type { FloodReport } from '../report'
+import type { FloodReport } from './report'
 
 type MyReportsProps = {
   reports: FloodReport[]
