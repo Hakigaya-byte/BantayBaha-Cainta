@@ -1,6 +1,14 @@
+import { useState } from 'react'
 import './App.css'
+import ReportFlood from './pages/ReportFlood'
 
 function App() {
+  const [showReportPage, setShowReportPage] = useState(false)
+
+  if (showReportPage) {
+    return <ReportFlood onBack={() => setShowReportPage(false)} />
+  }
+
   return (
     <main className="app">
       <nav className="navbar">
@@ -10,13 +18,15 @@ function App() {
         </div>
 
         <div className="nav-links">
-          <button>Home</button>
-          <button>Preparedness</button>
-          <button>Advisories</button>
-          <button>Emergency Contacts</button>
+          <button type="button">Home</button>
+          <button type="button">Preparedness</button>
+          <button type="button">Advisories</button>
+          <button type="button">Emergency Contacts</button>
         </div>
 
-        <button className="login-button">Login</button>
+        <button className="login-button" type="button">
+          Login
+        </button>
       </nav>
 
       <section className="hero">
@@ -36,8 +46,17 @@ function App() {
           </p>
 
           <div className="hero-actions">
-            <button className="primary-button">Report a Flood</button>
-            <button className="secondary-button">View Preparedness Guide</button>
+            <button
+              className="primary-button"
+              type="button"
+              onClick={() => setShowReportPage(true)}
+            >
+              Report a Flood
+            </button>
+
+            <button className="secondary-button" type="button">
+              View Preparedness Guide
+            </button>
           </div>
         </div>
 
