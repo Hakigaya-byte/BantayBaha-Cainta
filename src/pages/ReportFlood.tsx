@@ -1,13 +1,15 @@
 import { useState, type FormEvent } from 'react'
+import type { FloodReportInput, FloodSeverity } from '../report'
 
 type ReportFloodProps = {
   onBack: () => void
+  onSubmitReport: (report: FloodReportInput) => void
 }
 
 type FloodReportForm = {
   barangay: string
   locationDetails: string
-  severity: string
+  severity: FloodSeverity | ''
   description: string
   photoName: string
 }
@@ -20,7 +22,7 @@ const emptyForm: FloodReportForm = {
   photoName: '',
 }
 
-function ReportFlood({ onBack }: ReportFloodProps) {
+function ReportFlood({ onBack, onSubmitReport }: ReportFloodProps) {
   const [form, setForm] = useState<FloodReportForm>(emptyForm)
   const [submitted, setSubmitted] = useState(false)
 
@@ -34,12 +36,20 @@ function ReportFlood({ onBack }: ReportFloodProps) {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    setSubmitted(true)
+    if (form.severity === '') {
+      return
+    }
 
-    setForm({
-      ...emptyForm,
-      photoName: '',
+    onSubmitReport({
+      barangay: form.barangay,
+      locationDetails: form.locationDetails,
+      severity: form.severity,
+      description: form.description,
+      photoName: form.photoName,
     })
+
+    setSubmitted(true)
+    setForm(emptyForm)
   }
 
   if (submitted) {
@@ -47,11 +57,11 @@ function ReportFlood({ onBack }: ReportFloodProps) {
       <main className="report-page">
         <section className="success-card">
           <span className="success-icon">✓</span>
-          <p className="eyebrow">REPORT SUBMITTED</p>
-          <h1>Your flood report was sent.</h1>
+          <p className="eyebrow">TEST REPORT SUBMITTED</p>
+          <h1>Your flood report was saved.</h1>
           <p>
-            Your report currently has a <strong>Submitted</strong> status.
-            Authorized DRRMO staff will review the information.
+            This sample report currently has a <strong>Submitted</strong> status.
+            Later, Firebase will save it permanently in the database.
           </p>
 
           <button className="primary-button" onClick={onBack}>
@@ -158,4 +168,4 @@ function ReportFlood({ onBack }: ReportFloodProps) {
   )
 }
 
-export default ReportFlood 
+export default ReportFlood
