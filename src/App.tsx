@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useState } from 'react'
-import { onAuthStateChanged, signOut, type User } from 'firebase/auth'
+import { useEffect, useState } from 'react'
+import { signOut } from 'firebase/auth'
 import './App.css'
 import AdminDashboard from './AdminDashboard'
 import AdminLogin from './AdminLogin'
 import MyReports from './MyReports'
 import ReportFlood from './pages/ReportFlood'
 import { auth } from './firebase'
+import ResidentLogin from './ResidentLogin'
+import { useAccount } from './useAccount'
 import type {
   FloodReport,
   FloodReportInput,
@@ -13,46 +15,39 @@ import type {
 } from './report'
 import {
   createFloodReport,
-  getCurrentResidentId,
   subscribeToFloodReports,
   updateFloodReportStatus,
 } from './firestoreReports'
 
-type ActivePage = 'home' | 'report' | 'my-reports' | 'admin' | 'admin-login'
-
-const configuredAdminEmail = import.meta.env.VITE_ADMIN_EMAIL?.trim().toLowerCase()
+type ActivePage = 'home' | 'report' | 'my-reports' | 'admin' | 'admin-login' | 'resident-login'
 
 function App() {
   const [activePage, setActivePage] = useState<ActivePage>('home')
-  const [reports, setReports] = useState<FloodReport[]>([])
-  const [reportsError, setReportsError] = useState('')
-  const [currentUser, setCurrentUser] = useState<User | null>(null)
-
-  const residentId = useMemo(() => getCurrentResidentId(), [])
-  const myReports = reports.filter((report) => report.residentId === residentId)
-  const isAdmin =
-    Boolean(currentUser?.email) &&
-    currentUser?.email?.toLowerCase() === configuredAdminEmail
-
-  useEffect(() => {
-    return onAuthStateChanged(auth, setCurrentUser)
-  }, [])
+  const { user: currentUser, isStaff: isAdmin, loading: accountLoading, error: accountError } = useAccount()
+  const [reportState, setReportState] = useState<{ key: string; reports: FloodReport[]; error: string }>({ key: '', reports: [], error: '' })
+  const [logoutError, setLogoutError] = useState('')
+  const [loggingOut, setLoggingOut] = useState(false)
+  const uid = currentUser?.uid
+  const reportKey = uid && !accountLoading && !accountError ? `${uid}:${isAdmin}` : ''
+  const reports = reportKey && reportState.key === reportKey ? reportState.reports : []
+  const reportsError = reportKey && reportState.key === reportKey ? reportState.error : ''
+  const reportsLoading = Boolean(reportKey) && reportState.key !== reportKey
+  const myReports = reports.filter((report) => report.residentId === uid)
 
   useEffect(() => {
-    const unsubscribe = subscribeToFloodReports(
+    if (!reportKey || !uid) return
+    let active = true
+    const unsubscribe = subscribeToFloodReports(uid, isAdmin,
       (updatedReports) => {
-        setReports(updatedReports)
-        setReportsError('')
+        if (active) setReportState({ key: reportKey, reports: updatedReports, error: '' })
       },
       () => {
-        setReportsError(
-          'Firebase cannot load reports yet. Check that Cloud Firestore is enabled and its development rules allow this test app.',
-        )
+        if (active) setReportState({ key: reportKey, reports: [], error: 'Unable to load reports. Check your connection and reload the page.' })
       },
     )
 
-    return unsubscribe
-  }, [])
+    return () => { active = false; unsubscribe() }
+  }, [uid, isAdmin, reportKey])
 
   async function handleReportSubmit(reportInput: FloodReportInput) {
     await createFloodReport(reportInput)
@@ -65,20 +60,36 @@ function App() {
     await updateFloodReportStatus(reportId, newStatus)
   }
 
-  function handleAdminLoginSuccess(user: User) {
-    setCurrentUser(user)
-    setActivePage('admin')
+  async function handleLogout() {
+    setLoggingOut(true)
+    setLogoutError('')
+    try {
+      await signOut(auth)
+      setReportState({ key: '', reports: [], error: '' })
+      setActivePage('home')
+    } catch {
+      setLogoutError('Unable to log out. Please try again.')
+    } finally {
+      setLoggingOut(false)
+    }
   }
 
-  async function handleLogout() {
-    await signOut(auth)
-    setCurrentUser(null)
-    setActivePage('home')
+  if (activePage !== 'home' && (accountLoading || accountError)) {
+    return <main className="report-page"><section className="report-form-card">
+      <button className="back-button" onClick={() => setActivePage('home')}>← Back to Home</button>
+      <p role={accountError ? 'alert' : 'status'}>{accountError || 'Loading your account…'}</p>
+    </section></main>
+  }
+
+  if (activePage === 'resident-login' || (!currentUser && (activePage === 'report' || activePage === 'my-reports'))) {
+    return <ResidentLogin onBack={() => setActivePage('home')}
+      onSuccess={() => setActivePage(activePage === 'report' ? 'report' : 'my-reports')} />
   }
 
   if (activePage === 'report') {
     return (
       <ReportFlood
+        key={uid}
         onBack={() => setActivePage('home')}
         onSubmitReport={handleReportSubmit}
       />
@@ -89,34 +100,48 @@ function App() {
     return (
       <MyReports
         reports={myReports}
+        loading={reportsLoading}
+        error={reportsError}
         onBack={() => setActivePage('home')}
       />
     )
   }
 
-  if (activePage === 'admin-login') {
+  if (activePage === 'admin-login' && !currentUser) {
     return (
       <AdminLogin
         onBack={() => setActivePage('home')}
-        onLoginSuccess={handleAdminLoginSuccess}
+        onLoginSuccess={() => setActivePage('admin')}
       />
     )
   }
 
-  if (activePage === 'admin') {
-    if (!isAdmin || !currentUser?.email) {
+  if (activePage === 'admin' || activePage === 'admin-login') {
+    if (!currentUser) {
       return (
         <AdminLogin
           onBack={() => setActivePage('home')}
-          onLoginSuccess={handleAdminLoginSuccess}
+          onLoginSuccess={() => setActivePage('admin')}
         />
       )
     }
 
+    if (!isAdmin) return <main className="report-page"><section className="report-form-card">
+      <h1>Staff access required</h1>
+      <p>This account has resident access. Staff accounts are assigned by the project administrator.</p>
+      <button className="primary-button" onClick={() => setActivePage('my-reports')}>View my reports</button>
+      <button className="logout-button" onClick={() => void handleLogout()} disabled={loggingOut}>Log out</button>
+      {logoutError && <p role="alert" className="form-error">{logoutError}</p>}
+    </section></main>
+
     return (
       <AdminDashboard
+        key={uid}
         reports={reports}
-        staffEmail={currentUser.email}
+        staffEmail={currentUser.email ?? ''}
+        loading={reportsLoading}
+        error={reportsError || logoutError}
+        loggingOut={loggingOut}
         onBack={() => setActivePage('home')}
         onLogout={handleLogout}
         onUpdateStatus={handleStatusUpdate}
@@ -146,14 +171,23 @@ function App() {
           <button type="button">Emergency Contacts</button>
         </div>
 
+        <div className="account-actions">
+        {!currentUser && <button className="login-button" type="button" disabled={accountLoading}
+          onClick={() => setActivePage('resident-login')}>Resident Login</button>}
         <button
           className="login-button"
           type="button"
+          disabled={accountLoading}
           onClick={() => setActivePage(isAdmin ? 'admin' : 'admin-login')}
         >
           {isAdmin ? 'Staff Dashboard' : 'Staff Login'}
         </button>
+        {currentUser && <button className="logout-button" type="button" disabled={loggingOut}
+          onClick={() => void handleLogout()}>{loggingOut ? 'Logging out…' : 'Log out'}</button>}
+        </div>
       </nav>
+      {currentUser && <p className="account-banner">Signed in as {currentUser.email}</p>}
+      {(accountError || logoutError) && <p className="firebase-error" role="alert">{accountError || logoutError}</p>}
 
       <section className="hero">
         <div className="hero-content">
@@ -197,9 +231,7 @@ function App() {
           <div className="status-row">
             <span className="status-dot"></span>
             <span>
-              {reports.length === 0
-                ? 'Reports are reviewed by DRRMO staff'
-                : `${reports.length} report(s) available for DRRMO review`}
+              Reports are reviewed by DRRMO staff
             </span>
           </div>
         </div>

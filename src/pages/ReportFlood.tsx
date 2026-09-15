@@ -41,6 +41,10 @@ function ReportFlood({ onBack, onSubmitReport }: ReportFloodProps) {
     if (form.severity === '' || isSubmitting) {
       return
     }
+    if (!form.barangay.trim() || !form.locationDetails.trim() || !form.description.trim()) {
+      setSubmitError('Please fill in all required fields with more than spaces.')
+      return
+    }
 
     setIsSubmitting(true)
     setSubmitError('')
@@ -58,7 +62,7 @@ function ReportFlood({ onBack, onSubmitReport }: ReportFloodProps) {
       setForm(emptyForm)
     } catch {
       setSubmitError(
-        'Your report could not be saved yet. Please check the Firebase Firestore setup, then try again.',
+        'Your report was not saved. Check your connection and make sure you are signed in, then try again.',
       )
     } finally {
       setIsSubmitting(false)
@@ -74,7 +78,7 @@ function ReportFlood({ onBack, onSubmitReport }: ReportFloodProps) {
           <h1>Your flood report was saved.</h1>
           <p>
             This sample report currently has a <strong>Submitted</strong> status.
-            It is now saved in the Firebase database for this prototype.
+            You can follow its status in My Reports using this account.
           </p>
 
           <button className="primary-button" onClick={onBack}>
@@ -105,6 +109,7 @@ function ReportFlood({ onBack, onSubmitReport }: ReportFloodProps) {
             <label htmlFor="barangay">Barangay *</label>
             <input
               id="barangay"
+              maxLength={100}
               type="text"
               value={form.barangay}
               onChange={(event) => updateField('barangay', event.target.value)}
@@ -117,6 +122,7 @@ function ReportFlood({ onBack, onSubmitReport }: ReportFloodProps) {
             <label htmlFor="locationDetails">Detailed Location *</label>
             <input
               id="locationDetails"
+              maxLength={300}
               type="text"
               value={form.locationDetails}
               onChange={(event) =>
@@ -146,6 +152,7 @@ function ReportFlood({ onBack, onSubmitReport }: ReportFloodProps) {
             <label htmlFor="description">Description *</label>
             <textarea
               id="description"
+              maxLength={3000}
               value={form.description}
               onChange={(event) =>
                 updateField('description', event.target.value)
@@ -167,8 +174,8 @@ function ReportFlood({ onBack, onSubmitReport }: ReportFloodProps) {
               }
             />
             <small>
-              Upload a photo only if it is safe and available. A report can still
-              be submitted without one.
+              This prototype saves the filename only. Image upload is coming later;
+              you can submit your report without a photo.
             </small>
           </div>
 
@@ -176,7 +183,7 @@ function ReportFlood({ onBack, onSubmitReport }: ReportFloodProps) {
             {isSubmitting ? 'Saving report...' : 'Submit Flood Report'}
           </button>
 
-          {submitError && <p className="form-error">{submitError}</p>}
+          {submitError && <p className="form-error" role="alert">{submitError}</p>}
         </form>
       </section>
     </main>

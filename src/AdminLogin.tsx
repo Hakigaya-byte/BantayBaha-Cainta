@@ -1,13 +1,12 @@
 import { useState, type FormEvent } from 'react'
-import { signInWithEmailAndPassword, signOut, type User } from 'firebase/auth'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from './firebase'
+import { authErrorMessage } from './account'
 
 type AdminLoginProps = {
   onBack: () => void
-  onLoginSuccess: (user: User) => void
+  onLoginSuccess: () => void
 }
-
-const configuredAdminEmail = import.meta.env.VITE_ADMIN_EMAIL?.trim().toLowerCase()
 
 function AdminLogin({ onBack, onLoginSuccess }: AdminLoginProps) {
   const [email, setEmail] = useState('')
@@ -17,22 +16,15 @@ function AdminLogin({ onBack, onLoginSuccess }: AdminLoginProps) {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (isSubmitting) return
     setIsSubmitting(true)
     setError('')
 
     try {
-      const credentials = await signInWithEmailAndPassword(auth, email, password)
-      const signedInEmail = credentials.user.email?.toLowerCase()
-
-      if (!signedInEmail || signedInEmail !== configuredAdminEmail) {
-        await signOut(auth)
-        setError('This account is not authorized to access the DRRMO staff dashboard.')
-        return
-      }
-
-      onLoginSuccess(credentials.user)
-    } catch {
-      setError('Login failed. Check the staff email and password, then try again.')
+      await signInWithEmailAndPassword(auth, email.trim(), password)
+      onLoginSuccess()
+    } catch (failure) {
+      setError(authErrorMessage(failure))
     } finally {
       setIsSubmitting(false)
     }
@@ -82,7 +74,7 @@ function AdminLogin({ onBack, onLoginSuccess }: AdminLoginProps) {
             {isSubmitting ? 'Signing in...' : 'Sign in to Dashboard'}
           </button>
 
-          {error && <p className="form-error">{error}</p>}
+          {error && <p className="form-error" role="alert">{error}</p>}
         </form>
 
         <p className="admin-login-note">

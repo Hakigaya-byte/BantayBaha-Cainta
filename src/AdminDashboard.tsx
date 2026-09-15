@@ -4,6 +4,9 @@ import type { FloodReport, ReportStatus } from './report'
 type AdminDashboardProps = {
   reports: FloodReport[]
   staffEmail: string
+  loading: boolean
+  error: string
+  loggingOut: boolean
   onBack: () => void
   onLogout: () => Promise<void>
   onUpdateStatus: (reportId: string, newStatus: ReportStatus) => Promise<void>
@@ -20,11 +23,25 @@ const statusOptions: ReportStatus[] = [
 function AdminDashboard({
   reports,
   staffEmail,
+  loading,
+  error,
+  loggingOut,
   onBack,
   onLogout,
   onUpdateStatus,
 }: AdminDashboardProps) {
   const [selectedStatus, setSelectedStatus] = useState<'All' | ReportStatus>('All')
+  const [pendingId, setPendingId] = useState('')
+  const [updateError, setUpdateError] = useState('')
+
+  async function changeStatus(id: string, status: ReportStatus) {
+    if (pendingId) return
+    setPendingId(id)
+    setUpdateError('')
+    try { await onUpdateStatus(id, status) }
+    catch { setUpdateError('The status was not saved. Check your connection and staff access, then try again.') }
+    finally { setPendingId('') }
+  }
 
   const visibleReports =
     selectedStatus === 'All'
@@ -61,8 +78,8 @@ function AdminDashboard({
 
           <div className="admin-actions">
             <span className="admin-email">{staffEmail}</span>
-            <button className="logout-button" type="button" onClick={() => void onLogout()}>
-              Log out
+            <button className="logout-button" type="button" disabled={loggingOut} onClick={() => void onLogout()}>
+              {loggingOut ? 'Logging out…' : 'Log out'}
             </button>
           </div>
         </div>
@@ -113,7 +130,9 @@ function AdminDashboard({
           </label>
         </div>
 
-        {visibleReports.length === 0 ? (
+        {updateError && <p className="form-error" role="alert">{updateError}</p>}
+        {pendingId && <p role="status">Saving status…</p>}
+        {loading ? <p role="status">Loading reports…</p> : error ? <p className="form-error" role="alert">{error}</p> : visibleReports.length === 0 ? (
           <div className="empty-reports">
             <span>📭</span>
             <h2>No reports found.</h2>
@@ -142,7 +161,7 @@ function AdminDashboard({
                   <span>
                     Severity: <strong>{report.severity}</strong>
                   </span>
-                  <span>Submitted: {report.createdAt}</span>
+                  <span>Submitted: {report.createdAt ? new Date(report.createdAt).toLocaleString() : 'Saving…'}</span>
                 </div>
 
                 <p className="report-description">{report.description}</p>
@@ -151,8 +170,9 @@ function AdminDashboard({
                   Update report status
                   <select
                     value={report.status}
+                    disabled={Boolean(pendingId)}
                     onChange={(event) => {
-                      void onUpdateStatus(
+                      void changeStatus(
                         report.id,
                         event.target.value as ReportStatus,
                       )

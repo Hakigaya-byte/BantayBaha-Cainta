@@ -19,6 +19,5 @@ export type FloodReport = FloodReportInput & {
   id: string
   residentId: string
   status: ReportStatus
-  staffNote: string
   createdAt: string
 }

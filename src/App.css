@@ -4,6 +4,14 @@
   color: #102a43;
 }
 
+.auth-fields { border: 0; margin: 0; padding: 0; min-width: 0; }
+.auth-switch { display: block; margin-top: 24px; padding: 8px 0; border: 0; background: transparent; color: #0b6174; font: inherit; text-decoration: underline; cursor: pointer; }
+.account-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.account-banner { width: min(1180px, calc(100% - 48px)); margin: 0 auto; font-size: 0.9rem; overflow-wrap: anywhere; }
+button:disabled { opacity: 0.65; cursor: wait; transform: none; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #087e8b; outline-offset: 3px; }
+.navbar { flex-wrap: wrap; }
+
 .navbar {
   width: min(1180px, calc(100% - 48px));
   margin: 0 auto;
@@ -737,8 +745,9 @@
 }
 
 .admin-email {
-  color: #527184;
+  color: #e2f3f6;
   font-size: 0.85rem;
+  overflow-wrap: anywhere;
 }
 
 .logout-button {

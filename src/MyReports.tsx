@@ -2,10 +2,12 @@ import type { FloodReport } from './report'
 
 type MyReportsProps = {
   reports: FloodReport[]
+  loading: boolean
+  error: string
   onBack: () => void
 }
 
-function MyReports({ reports, onBack }: MyReportsProps) {
+function MyReports({ reports, loading, error, onBack }: MyReportsProps) {
   return (
     <main className="report-page">
       <section className="my-reports-card">
@@ -20,7 +22,7 @@ function MyReports({ reports, onBack }: MyReportsProps) {
           This page shows the reports submitted by the current resident.
         </p>
 
-        {reports.length === 0 ? (
+        {loading ? <p role="status">Loading your reports…</p> : error ? <p role="alert" className="form-error">{error}</p> : reports.length === 0 ? (
           <div className="empty-reports">
             <span>📭</span>
             <h2>No reports yet.</h2>
@@ -43,13 +45,13 @@ function MyReports({ reports, onBack }: MyReportsProps) {
 
                 <div className="report-details">
                   <span>Severity: <strong>{report.severity}</strong></span>
-                  <span>Submitted: {report.createdAt}</span>
+                  <span>Submitted: {report.createdAt ? new Date(report.createdAt).toLocaleString() : 'Saving…'}</span>
                 </div>
 
                 <p className="report-description">{report.description}</p>
 
                 {report.photoName && (
-                  <p className="photo-note">Attached photo: {report.photoName}</p>
+                  <p className="photo-note">Selected filename: {report.photoName} (image upload is not available yet)</p>
                 )}
               </article>
             ))}

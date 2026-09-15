@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isStaff() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/staff/$(request.auth.uid))
+        && get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.active == true;
+    }
+    function validText(value, maximum) {
+      return value is string && value.size() > 0 && value.size() <= maximum
+        && value.matches('[\\s\\S]*[^\\s][\\s\\S]*');
+    }
+    match /staff/{uid} {
+      allow get: if signedIn() && request.auth.uid == uid;
+      allow list, create, update, delete: if false;
+    }
+    match /floodReports/{reportId} {
+      allow get, list: if signedIn() && (resource.data.residentId == request.auth.uid || isStaff());
+      allow create: if signedIn()
+        && request.resource.data.keys().hasAll(['residentId', 'barangay', 'locationDetails', 'severity', 'description', 'photoName', 'status', 'createdAt', 'updatedAt'])
+        && request.resource.data.keys().hasOnly(['residentId', 'barangay', 'locationDetails', 'severity', 'description', 'photoName', 'status', 'createdAt', 'updatedAt'])
+        && request.resource.data.residentId == request.auth.uid
+        && validText(request.resource.data.barangay, 100)
+        && validText(request.resource.data.locationDetails, 300)
+        && validText(request.resource.data.description, 3000)
+        && request.resource.data.severity in ['Low', 'Medium', 'High']
+        && request.resource.data.photoName is string
+        && request.resource.data.photoName.size() <= 255
+        && request.resource.data.status == 'Submitted'
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+      allow update: if isStaff()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
+        && request.resource.data.status in ['Submitted', 'Under Review', 'Verified', 'Resolved', 'Closed']
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if false;
+    }
+  }
+}
