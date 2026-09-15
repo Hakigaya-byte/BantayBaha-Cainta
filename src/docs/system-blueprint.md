@@ -18,7 +18,7 @@ Switching accounts unsubscribes old listeners and hides reports from the previou
 
 | Role | Current access |
 | --- | --- |
-| Visitor | Homepage; login required for reporting and My Reports. No database report access. |
+| Visitor | Homepage and public preparedness guide; login required for reporting and My Reports. No database report access. |
 | Resident | Register/login, submit own report, read own reports and status. Cannot update or delete reports. |
 | Active staff | Read all reports, filter by status, view summary counts, update status. Cannot rewrite resident content or delete reports. |
 | Project administrator | Manages Authentication users and staff membership through the Firebase console; no administrator management page yet. |
@@ -69,11 +69,13 @@ All statuses are manually selected by authorized staff. The current rules permit
 
 ## Implemented versus planned
 
-Implemented: homepage, account registration/login/logout, reporting form, account-owned My Reports, staff dashboard, status filter/counts, database validation, and automated emulator tests.
+Implemented: homepage, account registration/login/logout, reporting form, account-owned My Reports, staff dashboard, status filter/counts, database validation, automated emulator tests, and a public preparedness guide with source links and a temporary 7-item go-bag checklist.
+
+Preparedness uses static content (`src/data/preparedness.ts`) and scoped styling (`src/pages/Preparedness.css`). It renders before the authentication loading/error guard, so a failed account check does not block the guide. Checklist state is in memory only and resets on page exit or refresh. No new database collection, upload, or staff editing interface is involved. Guidance is a manually maintained summary, not a live advisory or DRRMO-approved publication.
 
 Planned, not yet working features:
 
-- Preparedness guide, advisory, and emergency contact pages with reviewed content.
+- Advisory and emergency contact pages with reviewed content; DRRMO review of the existing preparedness summary before official use.
 - Actual optional image upload with appropriate access controls; the current control records only a filename.
 - Additional filters by severity, date, and barangay.
 - Internal staff notes. Store these in a separately protected location, not in resident-readable report documents.

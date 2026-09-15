@@ -12,8 +12,9 @@ A web-based school prototype for flood incident reporting and disaster preparedn
 - Authorized staff dashboard: all reports, status filter, summary counts, and status updates.
 - Firestore rules validate report fields, ownership, timestamps, and staff permissions.
 - Loading, validation, save-error, and account-switch states.
+- Public preparedness page: Before/During/After guidance, source links, and a temporary go-bag checklist. No login or database reads are needed by this page.
 
-Still planned: preparedness/advisory/contact pages (current navigation placeholders), actual image upload, additional dashboard filters, internal staff notes, password recovery/email verification, and public website deployment. The optional photo control currently saves **only the filename**, not the image.
+Still planned: advisory/contact pages (current navigation placeholders), actual image upload, additional dashboard filters, internal staff notes, password recovery/email verification, and public website deployment. The optional photo control currently saves **only the filename**, not the image.
 
 ## Access rules
 
@@ -78,10 +79,15 @@ For automated checks, stop the interactive emulators first with Ctrl+C, then run
 ```powershell
 npm.cmd run lint
 npm.cmd run build
+npm.cmd run test:content
 npm.cmd run test:rules
 ```
 
 The test command starts and stops its own local emulators. The 16 tests cover guest denial, report ownership, account isolation, field validation, staff permissions, role revocation, live status updates, and the Authentication lifecycle.
+
+`test:content` is a separate 3-test content structure check and does not use Firebase or Java. It imports TypeScript data with Node's native type stripping (Node 22.18+). The preparedness page is a static, manually maintained summary, not a live advisory or approved DRRMO publication. Its 7-item checklist is temporary React state: leaving the page or refreshing resets checks; nothing is saved to an account. The count is a packing aid, not a safety/readiness score.
+
+For the later redesign, edit `src/pages/Preparedness.css` independently from the content in `src/data/preparedness.ts`. Re-check the linked sources before changing safety guidance, update the review date and date label, and obtain DRRMO review before presenting it as official local guidance.
 
 ## Demonstration checklist
 
@@ -91,6 +97,7 @@ The test command starts and stops its own local emulators. The 16 tests cover gu
 4. Try Staff Login as a resident: staff access must be refused.
 5. Log in with the authorized staff account and change a sample report's status.
 6. Sign back in as its resident owner and verify the updated status.
+7. While signed out, open both homepage preparedness buttons. Read each section, check/uncheck go-bag items, reset them, and return home. Login must not be required.
 
 Older demonstration records created before account-based ownership still use browser-generated IDs. They have not been deleted or automatically assigned to a resident. Staff can still see them; a newly registered resident will not see those legacy records.
 

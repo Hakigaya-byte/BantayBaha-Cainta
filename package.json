@@ -11,6 +11,7 @@
     "dev:emulator": "vite --mode emulator --host localhost --port 5174 --strictPort",
     "emulators": "firebase emulators:start --only auth,firestore --project demo-bantaybaha",
     "test:rules": "firebase emulators:exec --only auth,firestore --project demo-bantaybaha \"node --test tests/firestore.test.mjs\"",
+    "test:content": "node --test tests/preparedness.test.mjs",
     "seed:demo": "node scripts/seed-demo.mjs"
   },
   "dependencies": {

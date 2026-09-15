@@ -5,6 +5,7 @@ import AdminDashboard from './AdminDashboard'
 import AdminLogin from './AdminLogin'
 import MyReports from './MyReports'
 import ReportFlood from './pages/ReportFlood'
+import Preparedness from './pages/Preparedness'
 import { auth } from './firebase'
 import ResidentLogin from './ResidentLogin'
 import { useAccount } from './useAccount'
@@ -19,7 +20,7 @@ import {
   updateFloodReportStatus,
 } from './firestoreReports'
 
-type ActivePage = 'home' | 'report' | 'my-reports' | 'admin' | 'admin-login' | 'resident-login'
+type ActivePage = 'home' | 'report' | 'my-reports' | 'admin' | 'admin-login' | 'resident-login' | 'preparedness'
 
 function App() {
   const [activePage, setActivePage] = useState<ActivePage>('home')
@@ -72,6 +73,14 @@ function App() {
     } finally {
       setLoggingOut(false)
     }
+  }
+
+  // Public information must remain readable even while account access loads or fails.
+  if (activePage === 'preparedness') {
+    return <Preparedness onBack={() => {
+      setActivePage('home')
+      window.scrollTo({ top: 0, behavior: 'instant' })
+    }} />
   }
 
   if (activePage !== 'home' && (accountLoading || accountError)) {
@@ -166,7 +175,7 @@ function App() {
             My Reports
           </button>
 
-          <button type="button">Preparedness</button>
+          <button type="button" onClick={() => setActivePage('preparedness')}>Preparedness</button>
           <button type="button">Advisories</button>
           <button type="button">Emergency Contacts</button>
         </div>
@@ -214,7 +223,7 @@ function App() {
               Report a Flood
             </button>
 
-            <button className="secondary-button" type="button">
+            <button className="secondary-button" type="button" onClick={() => setActivePage('preparedness')}>
               View Preparedness Guide
             </button>
           </div>
