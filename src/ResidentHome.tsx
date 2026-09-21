@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FaArrowRight, FaBell, FaBookOpen, FaBullhorn, FaChevronRight, FaCircleCheck, FaClock, FaFileLines, FaGlobe, FaLightbulb, FaLocationDot, FaPhone, FaShieldHalved, FaTextHeight, FaUser, FaWater } from 'react-icons/fa6'
 import type { Advisory } from './data/advisories'
 import { emergencyContacts } from './data/emergencyContacts'
@@ -41,6 +41,11 @@ export default function ResidentHome({ reports, loading, error, advisories, advi
     ? { welcome: 'Maligayang pagbabalik!', hero: 'Mag-report ng insidente, tingnan ang status ng reports, at manatiling updated sa advisories.', advisories: 'Pinakabagong Community Advisories' }
     : { welcome: 'Welcome back!', hero: 'Report incidents, check your report status, and stay informed with community advisories.', advisories: 'Latest Community Advisories' }
   const caintaEmergency = emergencyContacts.find(item => item.id === 'cainta-emergency')?.numbers[0]
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('large-text-mode', largeText)
+    return () => document.documentElement.classList.remove('large-text-mode')
+  }, [largeText])
 
   function toggleLargeText() {
     const next = !largeText
