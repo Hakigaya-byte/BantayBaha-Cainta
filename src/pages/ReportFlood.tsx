@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { FaArrowLeft, FaChevronRight, FaCircleCheck, FaCloudArrowUp, FaImage, FaLocationDot, FaPaperPlane, FaPhone, FaRoad, FaShieldHalved, FaUsers, FaWater, FaXmark } from 'react-icons/fa6'
 import { barangayHotlineGroups } from '../data/emergencyContacts'
 import { evidenceUploadsEnabled, evidenceUploadSetupNotice } from '../reportFeatures'
@@ -22,17 +22,9 @@ function ReportFlood({ onBack, onContacts, onMyReports, onSubmitReport }: Report
   const [submitError, setSubmitError] = useState('')
   const [photoError, setPhotoError] = useState('')
   const [draggingPhoto, setDraggingPhoto] = useState(false)
-  const [photoPreviewUrl, setPhotoPreviewUrl] = useState('')
   const fileInput = useRef<HTMLInputElement>(null)
   const submissionLock = useRef(false)
   const successHeading = useRef<HTMLHeadingElement>(null)
-
-  useEffect(() => {
-    if (!form.photo) { setPhotoPreviewUrl(''); return }
-    const url = URL.createObjectURL(form.photo)
-    setPhotoPreviewUrl(url)
-    return () => URL.revokeObjectURL(url)
-  }, [form.photo])
 
   function updateField(field: Exclude<keyof FloodReportForm, 'photo' | 'severity'>, value: string) {
     setForm(current => ({ ...current, [field]: value }))
@@ -131,12 +123,12 @@ function ReportFlood({ onBack, onContacts, onMyReports, onSubmitReport }: Report
                   if (event.dataTransfer.files.length !== 1) { setPhotoError('Please choose one photo at a time.'); return }
                   choosePhoto(event.dataTransfer.files[0])
                 }}>
-                {form.photo ? <><div className="flood-report-photo-preview">{photoPreviewUrl && <img src={photoPreviewUrl} alt="Preview of selected flood evidence" />}</div><div className="flood-report-file" role="status">
+                {form.photo ? <div className="flood-report-file" role="status">
                   <span className="flood-report-file-icon"><FaImage aria-hidden="true" /></span>
                   <div><strong>{form.photo.name}</strong><small>{form.photo.size < 1024 * 1024 ? Math.max(1, Math.round(form.photo.size / 1024)) + ' KB' : (form.photo.size / (1024 * 1024)).toFixed(1) + ' MB'} · {evidenceUploadsEnabled ? 'Ready to upload' : 'Selected on this device only'}</small></div>
                   <FaCircleCheck className="flood-report-file-check" aria-hidden="true" />
                   <button type="button" className="flood-report-remove" aria-label="Remove selected photo" onClick={() => choosePhoto(null)}><FaXmark aria-hidden="true" /></button>
-                </div></> : <p className="flood-report-photo-empty"><FaImage aria-hidden="true" /> Add a photo only if it is safe and available.</p>}
+                </div> : <p className="flood-report-photo-empty"><FaImage aria-hidden="true" /> Add a photo only if it is safe and available.</p>}
                 <div className="flood-report-photo-actions"><label className="flood-report-file-picker"><FaCloudArrowUp aria-hidden="true" /><span>{form.photo ? 'Change Photo' : 'Choose File'}</span><input ref={fileInput} id="photo" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="photo-help photo-error photo-availability" onChange={event => { const file = event.target.files?.[0]; if (file) choosePhoto(file) }} /></label><span>or drag and drop a file here</span></div>
               </div>
               <small id="photo-help">JPG, PNG, or WebP; maximum 5 MB. You can submit without a photo.</small>

@@ -108,7 +108,7 @@ function App() {
       if (!isAdmin) return <div className="report-page"><section className="report-form-card"><h1>Staff access required</h1><p>This account has resident access. Staff accounts are assigned by the project administrator.</p><button className="primary-button" onClick={() => navigate('my-reports')}>View my reports</button></section></div>
       return <AdminDashboard key={uid} reports={reports} staffEmail={currentUser.email ?? ''} loading={reportsLoading} error={reportsError} loggingOut={loggingOut} onBack={returnToHome} onLogout={handleLogout} onUpdateStatus={handleStatusUpdate} advisories={advisories} advisoriesLoading={advisoriesLoading} advisoriesError={advisoriesError} onCreateAdvisory={handleCreateAdvisory} onUpdateAdvisory={handleUpdateAdvisory} onDeleteAdvisory={handleDeleteAdvisory} onContacts={() => navigate('emergency-contacts')} onAdvisories={() => navigate('advisories')} />
     }
-    if (currentUser && !isAdmin && !accountLoading && !accountError) return <ResidentHome reports={myReports} loading={reportsLoading} error={reportsError} advisories={publishedAdvisories} advisoriesLoading={advisoriesLoading} advisoriesError={advisoriesError} userEmail={currentUser.email ?? ''} loggingOut={loggingOut} onLogout={handleLogout} onNavigate={navigate} />
+    if (currentUser && !isAdmin && !accountLoading && !accountError) return <ResidentHome reports={myReports} loading={reportsLoading} error={reportsError} onNavigate={navigate} />
     return <Home onNavigate={navigate} advisories={publishedAdvisories} loading={advisoriesLoading} error={advisoriesError} signedIn={Boolean(currentUser)} />
   }
 
