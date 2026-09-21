@@ -541,3 +541,74 @@ p { line-height: 1.6; }
   .login-help-link small { font-size: 10px; }
   .desktop-break { display: none; }
 }
+
+
+/* Resident dashboard upgrades: advisories, account preferences, report search and timeline. */
+.resident-account-panel { padding: 20px; }
+.resident-account-panel > .icon-disc { width: 46px; height: 46px; font-size: 22px; margin-bottom: 10px; }
+.resident-account-panel h2 { font-size: 22px; margin-bottom: 5px; }
+.resident-email { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; margin-bottom: 15px; }
+.resident-setting { width: 100%; display: flex; align-items: center; gap: 11px; text-align: left; border: 1px solid var(--line); background: #fbfdff; border-radius: 8px; padding: 11px 12px; margin-top: 8px; color: var(--navy); }
+.resident-setting:hover { background: #edf7ff; }
+.resident-setting > svg { width: 20px; color: var(--blue); }
+.resident-setting span { display: flex; flex-direction: column; gap: 3px; }
+.resident-setting strong { font-size: 12px; }
+.resident-setting small { color: var(--muted); font-size: 10px; }
+.resident-logout { width: 100%; margin-top: 12px; }
+.resident-info-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(300px, .85fr); gap: 15px; margin-top: 15px; align-items: start; }
+.resident-advisories-panel, .resident-emergency-card, .resident-preparedness-card { padding: 20px; }
+.resident-advisories-panel .section-heading { align-items: start; margin-bottom: 12px; }
+.resident-advisories-panel .section-heading p:not(.eyebrow) { font-size: 12px; color: var(--muted); margin: 4px 0 0; }
+.resident-advisory-list { display: grid; gap: 8px; }
+.resident-advisory-row { width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; background: #fbfdff; border: 1px solid var(--line); border-radius: 9px; padding: 12px; }
+.resident-advisory-row:hover { background: #edf7ff; }
+.resident-advisory-row .icon-disc { width: 42px; height: 42px; font-size: 20px; }
+.resident-advisory-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.resident-advisory-copy strong { font-size: 13px; }
+.resident-advisory-copy small { color: var(--muted); font-size: 11px; line-height: 1.45; }
+.resident-advisory-label { text-transform: uppercase; color: var(--blue); font-size: 9px; font-weight: 800; letter-spacing: .06em; }
+.resident-new-badge { display: inline-block; margin-left: 6px; padding: 2px 6px; border-radius: 12px; background: #e5f3ff; color: #0755b7; font-size: 8px; font-weight: 800; }
+.resident-advisory-date { flex: 0 0 125px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; color: var(--muted); font-size: 10px; }
+.resident-safety-stack { display: grid; gap: 15px; }
+.resident-emergency-card > a { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); color: var(--navy); text-decoration: none; font-size: 12px; }
+.resident-emergency-card > a:hover strong { text-decoration: underline; }
+.resident-emergency-card > a strong { color: #b9202e; }
+.resident-emergency-card p, .resident-preparedness-card p { font-size: 12px; color: var(--muted); }
+.resident-preparedness-card .button { width: 100%; margin-top: 8px; }
+.resident-reminders-wide { margin-top: 15px; display: flex; align-items: center; gap: 18px; }
+.resident-reminders-wide h2 { margin: 0; font-size: 20px; }
+.resident-reminders-wide ul { margin: 0; display: flex; gap: 18px; flex-wrap: wrap; }
+.report-search { flex: 1 1 260px; position: relative; }
+.report-search svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+.report-search input { width: 100%; min-height: 42px; border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px 9px 38px; font: inherit; background: white; }
+.report-detail-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+.report-detail-grid > div { border: 1px solid var(--line); background: #f8fbff; border-radius: 8px; padding: 11px; }
+.report-detail-grid small, .report-detail-grid strong { display: block; }
+.report-detail-grid small { color: var(--muted); font-size: 10px; margin-bottom: 4px; }
+.report-detail-grid strong { font-size: 12px; overflow-wrap: anywhere; }
+.report-timeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin: 20px 0; }
+.report-timeline > div { position: relative; text-align: center; color: #7890ad; font-size: 10px; }
+.report-timeline > div:not(:last-child)::after { content: ''; position: absolute; left: 55%; right: -45%; top: 15px; height: 2px; background: #d8e8f5; }
+.report-timeline > div.complete:not(:last-child)::after { background: #2a7fd4; }
+.report-timeline span { position: relative; z-index: 1; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 6px; background: #eef3f8; border: 2px solid #d4e1ed; font-weight: 800; }
+.report-timeline .complete { color: #0755b7; }
+.report-timeline .complete span { background: #e5f3ff; border-color: #398dff; color: #0755b7; }
+.report-timeline strong { display: block; font-size: 9px; line-height: 1.25; }
+.large-text-mode body { font-size: 112%; }
+.large-text-mode .resident-home-content p,
+.large-text-mode .resident-home-content small,
+.large-text-mode .resident-home-content button { font-size: 1em; }
+
+@media (max-width: 980px) {
+  .resident-info-grid { grid-template-columns: 1fr; }
+  .report-detail-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .resident-advisory-row { align-items: flex-start; flex-wrap: wrap; }
+  .resident-advisory-date { flex-basis: 100%; justify-content: flex-start; padding-left: 54px; }
+  .resident-reminders-wide { align-items: flex-start; }
+  .resident-reminders-wide ul { display: grid; gap: 9px; padding-left: 18px; }
+  .report-search { flex-basis: 100%; }
+  .report-detail-grid { grid-template-columns: 1fr; }
+  .report-timeline { overflow-x: auto; grid-template-columns: repeat(5, minmax(90px, 1fr)); padding-bottom: 8px; }
+}
