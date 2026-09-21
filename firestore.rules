@@ -11,6 +11,14 @@ service cloud.firestore {
       return value is string && value.size() > 0 && value.size() <= maximum
         && value.matches('[\\s\\S]*[^\\s][\\s\\S]*');
     }
+    function validAdvisory(data) {
+      return data.keys().hasAll(['category', 'title', 'summary', 'isPublished', 'publishedAt', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['category', 'title', 'summary', 'isPublished', 'publishedAt', 'createdAt', 'updatedAt'])
+        && data.category in ['Flood', 'Weather', 'Community']
+        && validText(data.title, 140)
+        && validText(data.summary, 1500)
+        && data.isPublished is bool;
+    }
     match /staff/{uid} {
       allow get: if signedIn() && request.auth.uid == uid;
       allow list, create, update, delete: if false;
@@ -19,22 +27,50 @@ service cloud.firestore {
       allow get, list: if signedIn() && (resource.data.residentId == request.auth.uid || isStaff());
       allow create: if signedIn()
         && request.resource.data.keys().hasAll(['residentId', 'barangay', 'locationDetails', 'severity', 'description', 'photoName', 'status', 'createdAt', 'updatedAt'])
-        && request.resource.data.keys().hasOnly(['residentId', 'barangay', 'locationDetails', 'severity', 'description', 'photoName', 'status', 'createdAt', 'updatedAt'])
+        && request.resource.data.keys().hasOnly(['residentId', 'barangay', 'locationDetails', 'severity', 'description', 'photoName', 'photoPath', 'status', 'createdAt', 'updatedAt'])
         && request.resource.data.residentId == request.auth.uid
         && validText(request.resource.data.barangay, 100)
         && validText(request.resource.data.locationDetails, 300)
         && validText(request.resource.data.description, 3000)
         && request.resource.data.severity in ['Low', 'Medium', 'High']
-        && request.resource.data.photoName is string
-        && request.resource.data.photoName.size() <= 255
+        && request.resource.data.photoName == ''
+        && request.resource.data.get('photoPath', '') == ''
         && request.resource.data.status == 'Submitted'
         && request.resource.data.createdAt == request.time
         && request.resource.data.updatedAt == request.time;
-      allow update: if isStaff()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
-        && request.resource.data.status in ['Submitted', 'Under Review', 'Verified', 'Resolved', 'Closed']
-        && request.resource.data.updatedAt == request.time;
+      allow update: if (
+          isStaff()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
+          && request.resource.data.status in ['Submitted', 'Under Review', 'Verified', 'Resolved', 'Closed']
+          && request.resource.data.updatedAt == request.time
+        ) || (
+          signedIn()
+          && resource.data.residentId == request.auth.uid
+          && resource.data.photoName == ''
+          && resource.data.get('photoPath', '') == ''
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['photoName', 'photoPath', 'updatedAt'])
+          && validText(request.resource.data.photoName, 255)
+          && request.resource.data.photoPath == 'reportEvidence/' + request.auth.uid + '/' + reportId + '/evidence'
+          && request.resource.data.updatedAt == request.time
+        );
       allow delete: if false;
+    }
+
+    match /advisories/{advisoryId} {
+      allow get, list: if isStaff() || resource.data.isPublished == true;
+      allow create: if isStaff()
+        && validAdvisory(request.resource.data)
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && ((request.resource.data.isPublished == true && request.resource.data.publishedAt == request.time)
+          || (request.resource.data.isPublished == false && request.resource.data.publishedAt == null));
+      allow update: if isStaff()
+        && validAdvisory(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.updatedAt == request.time
+        && ((request.resource.data.isPublished == true && request.resource.data.publishedAt == request.time)
+          || (request.resource.data.isPublished == false && request.resource.data.publishedAt == null));
+      allow delete: if isStaff();
     }
   }
 }

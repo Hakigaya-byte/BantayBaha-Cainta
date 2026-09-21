@@ -1,0 +1,132 @@
+.flood-report-page { padding-bottom: 12px; }
+.flood-report-width { width: min(1170px, calc(100% - 64px)); margin-inline: auto; }
+.flood-report-hero { height: 355px; background: #dceeff url('/assets/cainta-river-hero.png') center 48% / cover no-repeat; }
+.flood-report-hero-inner { padding: 32px 36px 0; display: flex; justify-content: space-between; gap: 30px; }
+.flood-report-hero h2 { font-size: clamp(28px, 2.6vw, 38px); line-height: 1.08; letter-spacing: -.045em; margin: 0 0 5px; }
+.flood-report-hero-inner > div:first-child { padding: 7px 12px; background: #f4fbffd9; border-radius: 9px; }
+.flood-report-hero-inner > div > p { margin: 0; color: #35557d; font-size: 17px; font-weight: 500; }
+.flood-report-motto { padding: 0 8px; text-align: center; color: #093d7a; align-self: start; background: #eaf6ffc9; border-radius: 8px; }
+.flood-report-motto > span { font-family: Caveat, cursive; font-size: 65px; line-height: 1; }
+.flood-report-motto p { font-size: 11px !important; margin-bottom: 8px !important; }
+.flood-report-layout { display: grid; grid-template-columns: minmax(0, 2.3fr) minmax(0, 1fr); gap: 14px; position: relative; margin-top: -178px; align-items: start; }
+.flood-report-card, .flood-report-guide, .flood-report-success { background: #fff; border: 1px solid #d8e8f5; border-radius: 14px; box-shadow: 0 8px 28px #113d6e0d; }
+.flood-report-card { padding: 20px 36px 12px; min-width: 0; }
+.flood-report-back { display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; padding: 0; min-height: 32px; margin-bottom: 17px; color: #0755b7; font-size: 12px; font-weight: 700; }
+.flood-report-heading .eyebrow { color: #0755b7; font-size: 10px; margin-bottom: 7px; }
+.flood-report-heading h1 { font-size: clamp(29px, 2.7vw, 38px); margin: 0 0 9px; line-height: 1.14; letter-spacing: -.055em; }
+.flood-report-intro { color: var(--muted); font-size: 14px; line-height: 1.55; margin-bottom: 16px; }
+.flood-report-fields { margin: 0; padding: 0; border: 0; min-width: 0; }
+.flood-report-card .form-group { margin-bottom: 14px; gap: 6px; }
+.flood-report-card .form-group label, .flood-report-severity legend { font-size: 13px; font-weight: 700; }
+.flood-report-input-icon { position: relative; }
+.flood-report-input-icon > svg { position: absolute; left: 15px; top: 15px; color: #2c7dd3; width: 17px; pointer-events: none; }
+.flood-report-input-icon input, .flood-report-input-icon select { padding-left: 43px; }
+.flood-report-card .form-group input, .flood-report-card .form-group select { min-height: 44px; }
+.flood-report-card .form-group textarea { min-height: 83px; line-height: 1.5; }
+.flood-report-severity { border: 0; padding: 0; margin: 0 0 14px; min-width: 0; }
+.flood-report-severity legend { padding: 0; margin-bottom: 7px; }
+.flood-report-severity-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.flood-report-severity-options label { position: relative; min-width: 0; cursor: pointer; }
+.flood-report-severity-options input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.flood-report-severity-options span { display: flex; align-items: center; justify-content: center; gap: 16px; min-height: 46px; border: 1px solid #c9dced; background: #f8fbff; font-size: 12px; font-weight: 600; }
+.flood-report-severity-options label + label span { border-left-width: 0; }
+.flood-report-severity-options label:first-child span { border-radius: 8px 0 0 8px; }
+.flood-report-severity-options label:last-child span { border-radius: 0 8px 8px 0; }
+.flood-report-severity-options svg { font-size: 21px; color: #49658d; }
+.flood-report-severity-options input:checked + span { background: #e4f2ff; color: #0755b7; box-shadow: inset 0 0 0 2px #398dff; }
+.flood-report-severity-options input:checked + span svg { color: #247edf; }
+.flood-report-severity-options input:focus-visible + span { outline: 3px solid #b36700; outline-offset: 3px; position: relative; z-index: 1; }
+.flood-report-severity-options input:disabled { cursor: wait; }
+.flood-report-dropzone { padding: 10px 14px; border: 1px dashed #8abbf1; border-radius: 9px; background: #f6fbff; transition: background .15s; }
+.flood-report-dropzone.is-dragging { background: #e1f1ff; border-color: #0755b7; outline: 2px solid #398dff; }
+.flood-report-file { display: flex; align-items: center; gap: 12px; min-width: 0; margin-bottom: 8px; }
+.flood-report-file-icon { display: grid; place-items: center; background: #e5f3ff; border: 1px solid #d1e5f6; width: 44px; height: 44px; border-radius: 8px; color: #2278ce; font-size: 22px; flex-shrink: 0; }
+.flood-report-file > div { min-width: 0; flex: 1; }
+.flood-report-file strong { display: block; font-size: 12px; line-height: 1.5; font-weight: 500; overflow-wrap: anywhere; }
+.flood-report-file small { display: block; }
+.flood-report-file-check { color: #138855; flex-shrink: 0; font-size: 21px; }
+.flood-report-remove { width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 7px; background: none; color: #4d6789; flex-shrink: 0; }
+.flood-report-remove:hover { background: #e6f0f9; }
+.flood-report-photo-empty { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; color: #4d6789; font-size: 12px; }
+.flood-report-photo-empty svg { font-size: 24px; color: #297cd4; flex-shrink: 0; }
+.flood-report-photo-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.flood-report-photo-actions > span { font-size: 11px; color: #4d6789; }
+.flood-report-file-picker { position: relative; display: inline-flex; align-items: center; gap: 12px; background: #e1efff; border: 1px solid #c7dffa; color: #0755b7; padding: 9px 16px; min-height: 39px; border-radius: 7px; overflow: hidden; cursor: pointer; }
+.flood-report-file-picker svg { font-size: 19px; }
+.flood-report-file-picker input[type=file] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; padding: 0; }
+.flood-report-file-picker:focus-within { outline: 3px solid #b36700; outline-offset: 3px; }
+.flood-report-file-picker:hover { background: #cde5ff; }
+.flood-report-card .flood-report-photo-group { gap: 6px; }
+#photo-error:empty { display: none; }
+#photo-availability:empty { display: none; }
+.flood-report-upload-notice { margin: 2px 0 0; padding: 10px 12px; color: #715414; background: #fff6df; border-radius: 7px; font-size: 11px; line-height: 1.6; }
+.flood-report-photo-group .form-error { margin: 0; }
+.flood-report-submit { width: 100%; font-size: 14px; min-height: 47px; }
+.flood-report-submit svg { color: #0755b7; font-size: 18px; }
+.flood-report-fields:disabled { opacity: .7; }
+.flood-report-review-note { display: flex; gap: 8px; justify-content: center; align-items: start; color: #4d6789; font-size: 10px; line-height: 1.6; margin: 8px 0 0; }
+.flood-report-review-note svg { color: #1767c1; font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.flood-report-saving { font-size: 12px; color: #4d6789; margin: 12px 0; }
+.flood-report-guide { padding: 11px; }
+.flood-report-guide-inner { background: #edf6ff; border-radius: 12px; padding: 27px 17px 23px; }
+.flood-report-guide-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 26px; }
+.flood-report-guide-heading .icon-disc { width: 46px; height: 46px; font-size: 27px; flex-shrink: 0; }
+.flood-report-guide-heading h2 { font-size: 18px; letter-spacing: -.035em; margin: 0 0 3px; }
+.flood-report-guide-heading p { font-size: 12px; color: #4d6789; margin: 0; }
+.flood-report-steps { margin: 0 12px 22px; padding: 0 0 0 40px; list-style: decimal; }
+.flood-report-steps li { padding: 0 0 26px 9px; color: #0755b7; }
+.flood-report-steps li::marker { font-size: 20px; font-weight: 800; }
+.flood-report-steps li strong { display: block; font-size: 13px; color: #102b55; line-height: 1.5; }
+.flood-report-steps li p { color: #4d6789; font-size: 13px; line-height: 1.5; margin: 3px 0 0; }
+.flood-report-steps li:last-child { padding-bottom: 0; }
+.flood-report-safety { display: flex; gap: 14px; background: #fff3d0; padding: 18px 16px; border-radius: 12px; margin-top: 23px; }
+.flood-report-safety > svg { color: #ae7800; font-size: 26px; flex-shrink: 0; }
+.flood-report-safety h3 { font-size: 13px; margin-bottom: 5px; }
+.flood-report-safety p { font-size: 12px; line-height: 1.6; color: #4d6789; margin: 0; }
+.flood-report-contacts { display: flex; width: 100%; align-items: center; gap: 12px; text-align: left; border: 1px solid #cfe2f5; border-radius: 11px; padding: 13px; background: #f4faff; margin-top: 17px; }
+.flood-report-contacts > svg:first-child { color: #398ce0; font-size: 22px; }
+.flood-report-contacts > span { flex: 1; }
+.flood-report-contacts strong, .flood-report-contacts small { display: block; }
+.flood-report-contacts strong { font-size: 12px; }
+.flood-report-contacts small { color: #4d6789; font-size: 11px; line-height: 1.5; margin-top: 4px; }
+.flood-report-contacts > svg:last-child { color: #1673cf; font-size: 12px; }
+.flood-report-contacts:hover { background: #e2f1ff; }
+.flood-report-guide-signoff { text-align: center; padding-top: 28px; }
+.flood-report-guide-signoff p { font-family: Caveat, cursive; font-size: 32px; line-height: 1.04; color: #0755b7; margin: 0 0 17px; }
+.flood-report-guide-signoff small { display: block; max-width: 230px; margin: auto; font-size: 10px; line-height: 1.5; color: #4d6789; }
+.flood-report-success { position: relative; width: min(680px, calc(100% - 36px)); margin: -178px auto 40px; padding: 35px; text-align: center; }
+.flood-report-success h1 { font-size: 31px; letter-spacing: -.045em; }
+.flood-report-success p { color: #4d6789; font-size: 14px; }
+.flood-report-reference { overflow-wrap: anywhere; }
+.flood-report-success-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.flood-report-success .flood-report-prototype { font-size: 11px; margin: 23px 0 0; }
+@media (max-width: 1000px) {
+  .flood-report-width { width: calc(100% - 40px); }
+  .flood-report-layout { grid-template-columns: minmax(0, 1.8fr) minmax(260px, 1fr); }
+  .flood-report-card { padding-inline: 24px; }
+  .flood-report-hero-inner { padding-inline: 12px; }
+  .flood-report-motto { max-width: 260px; }
+  .flood-report-guide-inner { padding-inline: 13px; }
+}
+@media (max-width: 760px) {
+  .flood-report-width { width: calc(100% - 28px); }
+  .flood-report-hero { height: 275px; background-position: 46% center; }
+  .flood-report-hero-inner { padding: 23px 6px 0; }
+  .flood-report-hero h2 { font-size: 29px; }
+  .flood-report-hero-inner > div > p { font-size: 13px; }
+  .flood-report-motto { display: none; }
+  .flood-report-layout { grid-template-columns: minmax(0, 1fr); margin-top: -100px; gap: 17px; }
+  .flood-report-card { padding: 17px 19px 16px; }
+  .flood-report-heading h1 { font-size: 30px; }
+  .flood-report-intro { font-size: 13px; }
+  .flood-report-card .form-group input, .flood-report-card .form-group select, .flood-report-card .form-group textarea { font-size: 16px; }
+  .flood-report-severity-options span { gap: 8px; }
+  .flood-report-dropzone { padding: 12px; }
+  .flood-report-file { gap: 8px; }
+  .flood-report-file-icon { width: 34px; height: 38px; font-size: 19px; }
+  .flood-report-file-check { display: none; }
+  .flood-report-guide-inner { padding: 23px; }
+  .flood-report-guide-heading { margin-bottom: 22px; }
+  .flood-report-guide-heading h2 { font-size: 21px; }
+  .flood-report-success { margin-top: -100px; padding: 25px 20px; }
+}

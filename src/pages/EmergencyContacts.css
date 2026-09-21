@@ -1,0 +1,118 @@
+.contacts-page { padding-block: 32px 42px; color: #102b55; }
+.contacts-page h2, .contacts-page h3, .contacts-page p { margin-top: 0; }
+.contacts-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 18px; }
+.contacts-section-heading .eyebrow { margin-bottom: 7px; color: #006b98; }
+.contacts-section-heading h2 { margin-bottom: 0; font-size: clamp(1.35rem, 2.2vw, 1.85rem); line-height: 1.18; letter-spacing: -.045em; }
+.contacts-section-heading > p { max-width: 430px; margin-bottom: 2px; font-size: .85rem; line-height: 1.6; color: #47617e; }
+.contacts-section-heading > div > p:last-child:not(.eyebrow) { margin: 8px 0 0; color: #47617e; font-size: .85rem; }
+.contacts-priority-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; }
+.contacts-priority-card { display: flex; align-items: center; gap: 20px; padding: 24px; border-radius: 14px; text-decoration: none; min-width: 0; transition: box-shadow .15s, transform .15s; }
+.contacts-priority-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px #0c3b7020; }
+.contacts-priority-cainta { background: #0b468d; color: #fff; }
+.contacts-priority-national { background: #fff4ce; border: 1px solid #efd477; color: #102b55; }
+.contacts-priority-icon { display: grid; place-items: center; flex: 0 0 60px; height: 60px; border-radius: 50%; background: #e5f3ff; color: #0c5197; font-size: 26px; }
+.contacts-priority-national .contacts-priority-icon { background: #ffe498; color: #8b5e00; }
+.contacts-priority-copy { display: flex; flex: 1; flex-direction: column; min-width: 0; gap: 6px; }
+.contacts-priority-copy small { font-size: .64rem; letter-spacing: .12em; font-weight: 800; }
+.contacts-priority-copy strong { font-size: clamp(1.55rem, 2.6vw, 2.1rem); letter-spacing: -.045em; white-space: nowrap; }
+.contacts-priority-copy > span { font-size: .75rem; line-height: 1.5; }
+.contacts-call-action { display: inline-flex; align-items: center; justify-content: center; gap: 9px; white-space: nowrap; background: #ffd253; color: #102b55; border-radius: 8px; padding: 13px 16px; font-size: .78rem; font-weight: 800; }
+.contacts-priority-national .contacts-call-action { background: #fff; border: 1px solid #efd477; }
+.contacts-services, .contacts-barangays { margin-top: 36px; }
+.contacts-heading-compact h2 { font-size: 1.35rem; }
+.contacts-tap-hint { display: inline-flex; align-items: center; gap: 8px; color: #41617f; font-size: .75rem; }
+.contacts-service-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.contacts-service-card, .contacts-call-reminder { padding: 22px; border-radius: 12px; border: 1px solid #d9e9f5; background: #fff; min-width: 0; }
+.contacts-service-title { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.contacts-service-icon { display: grid; place-items: center; width: 48px; height: 48px; flex: 0 0 48px; border-radius: 50%; color: #0755a7; background: #e4f5ff; font-size: 22px; }
+.contacts-service-cainta-fire .contacts-service-icon, .contacts-service-philippine-red-cross .contacts-service-icon { color: #c53b40; background: #ffeded; }
+.contacts-service-cainta-hospital .contacts-service-icon { color: #177f78; background: #e1f4ef; }
+.contacts-scope { color: #57718e; font-size: .65rem; text-transform: uppercase; font-weight: 700; letter-spacing: .08em; }
+.contacts-service-title h3 { font-size: .98rem; line-height: 1.35; margin: 4px 0 0; letter-spacing: -.02em; }
+.contacts-number-list { display: grid; gap: 8px; }
+.contacts-number { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: #102b55; text-decoration: none; border-radius: 7px; background: #f5faff; padding: 10px 12px; min-height: 57px; }
+.contacts-number:hover { background: #e7f3ff; }
+.contacts-number > span:first-child { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.contacts-number small { color: #516a83; font-size: .66rem; }
+.contacts-number strong { font-size: .92rem; letter-spacing: -.015em; }
+.contacts-call-icon { display: grid; place-items: center; flex: 0 0 30px; height: 30px; border-radius: 50%; color: #0755a7; background: #e2effb; font-size: .78rem; }
+.contacts-source-details { margin-top: 14px; font-size: .7rem; line-height: 1.6; color: #526b86; }
+.contacts-source-details summary { display: flex; justify-content: space-between; align-items: center; gap: 8px; list-style: none; cursor: pointer; min-height: 28px; }
+.contacts-source-details summary::-webkit-details-marker, .contacts-barangay-card summary::-webkit-details-marker { display: none; }
+.contacts-source-details summary svg { font-size: .6rem; }
+.contacts-source-details p { margin: 8px 0 0; }
+.contacts-source-details a, .contacts-source-note a { color: #0755a7; text-underline-offset: 3px; }
+.contacts-source-details a svg, .contacts-source-note a svg { width: .75em; height: .75em; }
+.contacts-call-reminder { background: #fff9e8; border-color: #edddaa; }
+.contacts-reminder-icon { float: right; display: grid; place-items: center; width: 40px; height: 40px; color: #a77205; background: #ffe7a0; border-radius: 50%; font-size: 20px; }
+.contacts-call-reminder .eyebrow { margin: 2px 0 10px; color: #816209; }
+.contacts-call-reminder h3 { max-width: 210px; font-size: 1.1rem; letter-spacing: -.03em; margin-bottom: 12px; line-height: 1.35; }
+.contacts-call-reminder ol { padding-left: 18px; display: grid; gap: 9px; margin: 0; font-size: .76rem; line-height: 1.6; color: #4b5362; }
+.contacts-call-reminder > p:last-child { font-size: .65rem; line-height: 1.6; color: #776b50; margin: 14px 0 0; padding-top: 12px; border-top: 1px solid #ebdfbd; }
+.contacts-barangays { padding-top: 28px; border-top: 1px solid #d9e8f3; }
+.contacts-search { width: min(100%, 330px); }
+.contacts-search label { display: block; font-size: .7rem; font-weight: 700; margin-bottom: 7px; color: #3f5e7c; }
+.contacts-search > div { display: flex; align-items: center; gap: 10px; padding-left: 14px; background: #fff; border: 1px solid #c3dbed; border-radius: 8px; color: #47749a; }
+.contacts-search input { border: 0; padding: 12px 12px 12px 0; background: transparent; color: #102b55; font: inherit; font-size: .78rem; width: 100%; min-width: 0; }
+.contacts-search > div:focus-within { outline: 3px solid #1971ca; outline-offset: 2px; }
+.contacts-search input:focus-visible { outline: none; }
+.contacts-search input::placeholder { color: #637f9b; }
+.contacts-result-count { font-size: .71rem; color: #57718a; margin-bottom: 13px; line-height: 1.6; }
+.contacts-barangay-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 12px; }
+.contacts-barangay-card { border: 1px solid #d4e6f3; background: #fff; border-radius: 10px; overflow: clip; }
+.contacts-barangay-card > summary { display: flex; align-items: center; gap: 12px; list-style: none; cursor: pointer; padding: 17px; min-height: 90px; }
+.contacts-barangay-card > summary:hover { background: #f5fbff; }
+.contacts-barangay-card > summary:focus-visible { outline-offset: -4px; }
+.contacts-barangay-icon { display: grid; place-items: center; flex: 0 0 40px; height: 40px; background: #eaf6ff; color: #00659c; border-radius: 50%; }
+.contacts-barangay-card > summary > span:nth-child(2) { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.contacts-barangay-card small { font-size: .57rem; font-weight: 800; letter-spacing: .11em; color: #46718c; }
+.contacts-barangay-card summary strong { font-size: .96rem; letter-spacing: -.02em; }
+.contacts-barangay-card summary span span { font-size: .66rem; color: #647a91; }
+.contacts-expand-icon { font-size: .73rem; color: #0e5ea1; transition: transform .15s; }
+.contacts-barangay-card[open] .contacts-expand-icon, .contacts-source-details[open] summary svg { transform: rotate(180deg); }
+.contacts-barangay-numbers { padding: 0 14px 14px; display: grid; gap: 6px; }
+.contacts-barangay-numbers .contacts-number small { font-size: .63rem; font-weight: 500; letter-spacing: 0; color: #516a83; }
+.contacts-empty { padding: 28px; text-align: center; border: 1px dashed #bed5e8; background: #fff; border-radius: 10px; }
+.contacts-empty > svg { font-size: 24px; color: #1971b6; margin-bottom: 12px; }
+.contacts-empty h3 { font-size: 1rem; margin-bottom: 8px; }
+.contacts-empty p { font-size: .8rem; color: #526b85; line-height: 1.6; }
+.contacts-source-note { display: flex; align-items: start; gap: 12px; margin-top: 24px; padding: 18px 20px; color: #496784; background: #eaf5fc; border-radius: 10px; font-size: .7rem; line-height: 1.7; }
+.contacts-source-note > svg { flex: 0 0 17px; margin-top: 3px; color: #0b67a5; }
+.contacts-source-note strong { color: #244a6c; font-size: .75rem; }
+.contacts-source-note p { margin: 5px 0 0; }
+.contacts-back { display: inline-flex; gap: 8px; align-items: center; background: transparent; border: 0; color: #0755a7; padding: 12px 0; margin-top: 13px; font: inherit; font-size: .75rem; font-weight: 700; cursor: pointer; }
+.contacts-back:hover { text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 1100px) {
+  .contacts-priority-card { gap: 14px; padding: 22px 18px; flex-wrap: wrap; }
+  .contacts-priority-icon { flex-basis: 48px; height: 48px; font-size: 23px; }
+  .contacts-priority-copy strong { font-size: 1.65rem; }
+  .contacts-call-action { width: 100%; padding: 11px; }
+  .contacts-service-card, .contacts-call-reminder { padding: 18px; }
+}
+@media (max-width: 850px) {
+  .contacts-service-grid, .contacts-barangay-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .contacts-section-heading { align-items: start; flex-direction: column; gap: 12px; }
+  .contacts-section-heading > p { max-width: none; }
+  .contacts-heading-compact { flex-direction: row; align-items: center; }
+  .contacts-search { width: 100%; }
+}
+@media (max-width: 560px) {
+  .contacts-page { padding-block: 24px 28px; }
+  .contacts-priority-grid, .contacts-service-grid, .contacts-barangay-grid { grid-template-columns: 1fr; }
+  .contacts-priority-card { padding: 19px; }
+  .contacts-priority-copy strong { font-size: 1.9rem; }
+  .contacts-priority-copy > span { font-size: .72rem; }
+  .contacts-services, .contacts-barangays { margin-top: 28px; }
+  .contacts-heading-compact { flex-direction: column; align-items: start; gap: 9px; }
+  .contacts-number { min-height: 62px; padding: 12px; }
+  .contacts-number strong { font-size: 1rem; }
+  .contacts-number small { font-size: .72rem; }
+  .contacts-source-details { font-size: .76rem; }
+  .contacts-source-details summary { min-height: 36px; }
+  .contacts-call-reminder ol { font-size: .82rem; }
+  .contacts-call-reminder > p:last-child { font-size: .72rem; }
+  .contacts-barangay-card summary strong { font-size: 1rem; }
+  .contacts-search input { font-size: 1rem; }
+  .contacts-source-note { font-size: .74rem; padding: 16px; }
+  .contacts-back { min-height: 44px; font-size: .82rem; }
+}

@@ -1,54 +1,103 @@
-/* Functional baseline only. All guide styles are scoped for the later redesign. */
-.preparedness-page {
-  min-height: 100vh;
-  padding: 32px 20px 56px;
-  color: #102a43;
-  background: #f5f9fc;
-  line-height: 1.65;
-}
-
-.preparedness-content { max-width: 920px; margin: 0 auto; }
-.preparedness-header { margin: 28px 0 24px; }
-.preparedness-header h1 { margin: 0; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.15; }
-.preparedness-header p { max-width: 70ch; }
-.preparedness-notice { padding: 18px 22px; border-left: 4px solid #b47c09; background: #fff5db; }
-.preparedness-notice p { margin-bottom: 0; }
-.preparedness-jump-links { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0; }
-.preparedness-page button:not(.back-button) {
-  min-height: 44px;
-  padding: 9px 14px;
-  border: 1px solid #b7cdd8;
-  border-radius: 6px;
-  background: #fff;
-  color: #124b62;
-  font: inherit;
-  cursor: pointer;
-}
-.preparedness-page button:disabled { cursor: default; }
-.preparedness-page button:not(:disabled):hover { background: #e9f4f7; }
-.preparedness-section { padding: 24px; margin-bottom: 20px; border: 1px solid #d8e6ec; border-radius: 8px; background: white; }
-.preparedness-section h2 { margin: 0; line-height: 1.3; font-size: 1.5rem; scroll-margin-top: 24px; }
-.preparedness-subtitle { color: #4c6374; }
-.preparedness-tips { margin-bottom: 0; padding-left: 22px; }
-.preparedness-tips li + li { margin-top: 18px; }
-.preparedness-tips p { margin: 0 0 4px; }
-.preparedness-tips a { font-size: 0.85rem; }
-.preparedness-page a { color: #0b6174; text-underline-offset: 3px; overflow-wrap: anywhere; }
-.preparedness-page a:hover { color: #073b4c; }
-.preparedness-page :focus-visible { outline: 3px solid #087e8b; outline-offset: 4px; }
-.preparedness-checklist { min-width: 0; border: 0; margin: 20px 0 0; padding: 0; }
-.preparedness-checklist legend { font-weight: 700; margin-bottom: 10px; }
-.preparedness-checklist label { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; cursor: pointer; }
-.preparedness-checklist input { width: 20px; height: 20px; flex-shrink: 0; margin-top: 3px; accent-color: #087e8b; }
-.preparedness-checklist-actions { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
-.preparedness-sources li + li { margin-top: 10px; }
+.preparedness-page { padding-block: 0 32px; color: #102b55; }
+.preparedness-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; padding: 12px; position: relative; margin-top: -35px; margin-bottom: 18px; }
+.preparedness-tab { display: flex; align-items: center; gap: 16px; width: 100%; min-height: 86px; padding: 14px 18px; border: 1px solid #d8e8f5; border-radius: 9px; background: #f1f9ff; color: #082858; text-align: left; cursor: pointer; font: inherit; }
+.preparedness-tab.is-active { border-color: #1687ff; outline: 1px solid #1687ff; background: #e7f6ff; }
+.preparedness-tab:hover { background: #e7f6ff; }
+.preparedness-tab strong { display: block; font-size: 18px; letter-spacing: -.45px; }
+.preparedness-tab small { display: block; margin-top: 4px; color: #435f88; font-size: 12px; line-height: 1.4; }
+.preparedness-tab-icon { display: grid; place-items: center; flex-shrink: 0; width: 56px; height: 56px; border-radius: 50%; background: #087da6; color: #fff; font-size: 28px; }
+.preparedness-tab.is-active .preparedness-tab-icon { background: #085bc0; }
+.preparedness-tab-chevron { margin-left: auto; flex-shrink: 0; font-size: 14px; }
+.preparedness-main-grid { display: grid; grid-template-columns: 1.36fr 1fr 1fr; gap: 12px; align-items: stretch; }
+.preparedness-feature { position: relative; isolation: isolate; min-height: 340px; overflow: hidden; background: #f2faff; }
+.preparedness-feature > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: right bottom; z-index: -1; }
+.preparedness-feature-copy { padding: 20px; width: 62%; }
+.preparedness-label { margin: 0 0 7px; color: #08659d; font-size: 10px; line-height: 1.35; font-weight: 800; text-transform: uppercase; letter-spacing: 1.65px; }
+.preparedness-feature h2 { margin: 0 0 12px; font-size: clamp(23px, 2.1vw, 31px); letter-spacing: -1px; line-height: 1.12; color: #092453; }
+.preparedness-feature-copy > p:last-child { font-size: 12px; line-height: 1.55; max-width: 27ch; color: #435f88; }
+.preparedness-bag { padding: 17px 18px 12px; background: #fff; }
+.preparedness-card-heading { display: flex; gap: 12px; align-items: flex-start; }
+.preparedness-card-heading p { margin: 4px 0 0; font-size: 12px; line-height: 1.5; color: #435f88; }
+.preparedness-round-icon { display: grid; place-items: center; flex: 0 0 45px; width: 45px; height: 45px; border-radius: 50%; background: #d9f2ff; color: #0561b8; font-size: 22px; }
+.preparedness-checklist { min-width: 0; margin: 12px 0 0; padding: 0; border: 0; }
+.preparedness-checklist label { display: flex; gap: 9px; align-items: flex-start; padding: 5px 0; font-size: 11px; line-height: 1.45; color: #435f88; cursor: pointer; }
+.preparedness-checklist input { width: 15px; height: 15px; margin: 0; margin-top: 1px; flex-shrink: 0; accent-color: #0965bc; }
+.preparedness-checklist label.is-packed span { color: #187049; text-decoration: line-through; }
+.preparedness-checklist-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; }
+.preparedness-checklist-actions p { margin: 0; color: #0561b8; font-size: 11px; font-weight: 700; }
+.preparedness-checklist-actions button { min-height: 28px; padding: 3px 9px; background: #e9f5ff; color: #0c57a2; border: 1px solid #d8e8f5; border-radius: 5px; font: inherit; font-size: 11px; cursor: pointer; }
+.preparedness-checklist-actions button:disabled { opacity: .55; cursor: default; }
+.preparedness-fine-print { color: #61718a; font-size: 10px; line-height: 1.5; margin: 8px 0 0; }
+.preparedness-resources { display: grid; gap: 12px; align-content: start; }
+.preparedness-resource-card { padding: 16px; }
+.preparedness-resource-warm { background: #fffaf0; border-color: #f5e7be; }
+.preparedness-resource-warm .preparedness-round-icon { background: #ffdf77; color: #07578a; }
+.preparedness-resource-blue { background: #eaf7ff; }
+.preparedness-resource-link { display: flex; gap: 12px; align-items: center; width: 100%; margin-top: 14px; padding: 11px 12px; border: 1px solid #d8e8f5; border-radius: 7px; background: #fff; color: #082858; text-decoration: none; text-align: left; font: inherit; cursor: pointer; }
+.preparedness-resource-link > svg { flex-shrink: 0; font-size: 21px; }
+.preparedness-resource-link > svg:last-of-type { margin-left: auto; font-size: 13px; }
+.preparedness-resource-link strong { display: block; font-size: 11px; line-height: 1.35; }
+.preparedness-resource-link small { display: block; margin-top: 3px; color: #435f88; font-size: 10px; line-height: 1.35; }
+.preparedness-resource-link:hover { border-color: #4a9be3; }
+.preparedness-text-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; color: #0755b7; font-size: 10px; line-height: 1.5; }
+.preparedness-quick-tips { display: flex; gap: 18px; padding: 18px; margin-top: 12px; background: #fff; }
+.preparedness-tips-heading { flex: 0 0 154px; }
+.preparedness-tips-heading h2 { margin: 0; font-size: 19px; line-height: 1.15; letter-spacing: -.6px; color: #082858; }
+.preparedness-tips { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; flex: 1; list-style: none; margin: 0; padding: 0; }
+.preparedness-tips li { display: flex; align-items: flex-start; gap: 10px; padding-left: 14px; border-left: 1px solid #d8e8f5; }
+.preparedness-tip-number { color: #1687cf; font-size: 11px; font-weight: 800; margin-top: 2px; }
+.preparedness-tips p { margin: 0; color: #435f88; font-size: 11px; line-height: 1.5; }
+.preparedness-tips a { display: inline-block; margin-top: 6px; color: #0a5b9b; font-size: 9px; line-height: 1.4; text-underline-offset: 3px; }
+.preparedness-notice { display: flex; align-items: flex-start; gap: 12px; padding: 14px 3px; color: #55647b; }
+.preparedness-notice > svg { margin-top: 2px; flex-shrink: 0; color: #9a7100; }
+.preparedness-notice p { margin: 0; font-size: 10px; line-height: 1.65; }
+.preparedness-sources { background: #fff; font-size: 11px; color: #435f88; }
+.preparedness-sources summary { padding: 13px 16px; color: #124b78; cursor: pointer; font-weight: 600; }
+.preparedness-sources > div { padding: 0 16px 12px; line-height: 1.7; }
+.preparedness-sources a { color: #0755b7; text-underline-offset: 3px; }
+.preparedness-sources li + li { margin-top: 6px; }
+.preparedness-back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; border: 0; padding: 10px 0; margin-top: 8px; background: transparent; color: #0755b7; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
 .preparedness-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.preparedness-page :focus-visible { outline: 3px solid #1289dd; outline-offset: 3px; }
 
-@media (max-width: 600px) {
-  .preparedness-page { padding: 24px 16px 40px; }
-  .preparedness-section { padding: 20px 16px; }
+@media (max-width: 1120px) {
+  .preparedness-main-grid { grid-template-columns: 1.2fr 1fr; }
+  .preparedness-resources { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .preparedness-tab { gap: 10px; padding: 12px; }
+  .preparedness-tab-icon { width: 44px; height: 44px; font-size: 22px; }
+  .preparedness-tab strong { font-size: 15px; }
+  .preparedness-tab-chevron { display: none; }
+  .preparedness-feature { min-height: 360px; }
+  .preparedness-checklist label { font-size: 12px; padding: 6px 0; }
+  .preparedness-tips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html:has(.preparedness-page) { scroll-behavior: auto; }
+@media (max-width: 700px) {
+  .preparedness-tabs { gap: 6px; padding: 7px; margin-top: -22px; }
+  .preparedness-tab { flex-direction: column; gap: 8px; min-height: 100px; padding: 11px 5px; text-align: center; }
+  .preparedness-tab strong { font-size: 12px; letter-spacing: -.25px; }
+  .preparedness-tab small { display: none; }
+  .preparedness-tab-icon { width: 37px; height: 37px; font-size: 19px; }
+  .preparedness-main-grid { grid-template-columns: 1fr; }
+  .preparedness-feature { min-height: 320px; }
+  .preparedness-feature-copy { padding: 20px; width: 64%; }
+  .preparedness-feature h2 { max-width: 13ch; font-size: 27px; }
+  .preparedness-feature-copy > p:last-child { font-size: 12px; max-width: 24ch; }
+  .preparedness-bag { padding: 20px; }
+  .preparedness-card-heading p { font-size: 13px; }
+  .preparedness-checklist label { min-height: 42px; font-size: 13px; padding: 10px 0; align-items: center; }
+  .preparedness-checklist input { width: 19px; height: 19px; }
+  .preparedness-checklist-actions button { min-height: 40px; padding: 8px 12px; font-size: 12px; }
+  .preparedness-fine-print { font-size: 11px; }
+  .preparedness-resources { grid-template-columns: 1fr; }
+  .preparedness-resource-link { min-height: 58px; }
+  .preparedness-resource-link strong { font-size: 13px; }
+  .preparedness-resource-link small, .preparedness-text-link { font-size: 12px; }
+  .preparedness-text-link { min-height: 40px; }
+  .preparedness-quick-tips { flex-direction: column; gap: 14px; padding: 20px; }
+  .preparedness-tips-heading { flex: initial; }
+  .preparedness-tips { grid-template-columns: 1fr; gap: 14px; }
+  .preparedness-tips p { font-size: 13px; }
+  .preparedness-tips a { font-size: 11px; }
+  .preparedness-notice p, .preparedness-sources { font-size: 12px; }
 }

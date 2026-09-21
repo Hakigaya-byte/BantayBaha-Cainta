@@ -2,17 +2,22 @@ import { useState, type FormEvent } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from './firebase'
 import { authErrorMessage } from './account'
+import { FaArrowRightToBracket, FaEnvelope, FaEye, FaEyeSlash, FaLock } from 'react-icons/fa6'
+import LoginLayout from './LoginLayout'
 
 type AdminLoginProps = {
   onBack: () => void
   onLoginSuccess: () => void
+  onResidentLogin?: () => void
+  onStaffLogin?: () => void
 }
 
-function AdminLogin({ onBack, onLoginSuccess }: AdminLoginProps) {
+function AdminLogin({ onBack, onLoginSuccess, onResidentLogin, onStaffLogin }: AdminLoginProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -31,21 +36,14 @@ function AdminLogin({ onBack, onLoginSuccess }: AdminLoginProps) {
   }
 
   return (
-    <main className="report-page">
-      <section className="report-form-card admin-login-card">
-        <button className="back-button" type="button" onClick={onBack}>
-          ← Back to Home
-        </button>
-
-        <p className="eyebrow report-eyebrow">DRRMO STAFF ACCESS</p>
-        <h1>Staff login</h1>
-        <p className="report-intro">
-          Sign in using the authorized DRRMO staff account to review and update flood reports.
-        </p>
-
+    <LoginLayout role="staff" busy={isSubmitting} onBack={onBack} onResidentLogin={onResidentLogin} onStaffLogin={onStaffLogin}>
+        <div className="login-card-heading"><h2>Welcome, DRRMO Staff!</h2>
+          <p>Sign in with your authorized account to review and update flood reports.</p></div>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <fieldset disabled={isSubmitting} className="auth-fields">
+          <div className="login-field">
             <label htmlFor="staff-email">Staff Email</label>
+            <div className="login-input-wrap"><FaEnvelope aria-hidden="true" />
             <input
               id="staff-email"
               type="email"
@@ -54,34 +52,35 @@ function AdminLogin({ onBack, onLoginSuccess }: AdminLoginProps) {
               placeholder="Enter staff email"
               autoComplete="username"
               required
-            />
+              maxLength={254}
+            /></div>
           </div>
 
-          <div className="form-group">
+          <div className="login-field">
             <label htmlFor="staff-password">Password</label>
+            <div className="login-input-wrap"><FaLock aria-hidden="true" />
             <input
               id="staff-password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="Enter password"
               autoComplete="current-password"
               required
             />
+            <button type="button" className="login-password-toggle" aria-label={showPassword ? 'Hide password' : 'Show password'} aria-pressed={showPassword}
+              onClick={() => setShowPassword(!showPassword)}>{showPassword ? <FaEyeSlash aria-hidden="true" /> : <FaEye aria-hidden="true" />}</button></div>
           </div>
 
-          <button className="primary-button submit-button" type="submit" disabled={isSubmitting}>
+          {error && <p className="form-error" role="alert">{error}</p>}
+          <button className="login-submit" type="submit" disabled={isSubmitting}>
+            <FaArrowRightToBracket aria-hidden="true" />
             {isSubmitting ? 'Signing in...' : 'Sign in to Dashboard'}
           </button>
-
-          {error && <p className="form-error" role="alert">{error}</p>}
+          </fieldset>
         </form>
-
-        <p className="admin-login-note">
-          This area is for the BantayBaha Cainta DRRMO prototype staff account only.
-        </p>
-      </section>
-    </main>
+        <p className="login-staff-reminder">Staff accounts are assigned by the project administrator. There is no public staff registration.</p>
+    </LoginLayout>
   )
 }
 

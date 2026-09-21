@@ -1,17 +1,21 @@
-* {
-  box-sizing: border-box;
-}
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-500.css';
+@import '@fontsource/inter/latin-600.css';
+@import '@fontsource/inter/latin-700.css';
+@import '@fontsource/inter/latin-800.css';
+@import '@fontsource/caveat/latin-600.css';
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  min-width: 320px;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-button {
-  font-family: inherit;
-}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; font-family: Inter, Arial, sans-serif; color: #102b55; background: #f3faff; }
+button, input, select, textarea { font: inherit; }
+button, a, input, select, textarea, summary { -webkit-tap-highlight-color: transparent; }
+button, summary { cursor: pointer; }
+button:disabled { cursor: wait; opacity: .6; }
+button { color: inherit; }
+img { max-width: 100%; }
+a { color: #0758ba; }
+button svg, a svg { flex-shrink: 0; }
+:focus-visible { outline: 3px solid #b36700; outline-offset: 4px; }
+#main-content:focus { outline: none; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
