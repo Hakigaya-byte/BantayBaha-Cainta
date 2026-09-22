@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react'
 import { FaArrowLeft, FaArrowRight, FaBell, FaBookOpen, FaBullhorn, FaCalendarDays, FaChevronRight, FaCloudRain, FaCircleInfo, FaMagnifyingGlass, FaPhone, FaUsers, FaWater } from 'react-icons/fa6'
-import { sampleAdvisories, type Advisory, type AdvisoryCategory } from '../data/advisories'
+import type { Advisory, AdvisoryCategory } from '../data/advisories'
 import './Advisories.css'
 
 type AdvisoriesProps = {
   advisories: Advisory[]
   loading: boolean
   error: string
+  onRetry: () => void
   onBack: () => void
   onPreparedness?: () => void
   onContacts?: () => void
@@ -24,12 +25,11 @@ function dateLabel(advisory: Advisory) {
   return Number.isNaN(date.getTime()) ? 'Date unavailable' : date.toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short' })
 }
 
-export default function Advisories({ advisories, loading, error, onBack, onPreparedness, onContacts }: AdvisoriesProps) {
+export default function Advisories({ advisories, loading, error, onRetry, onBack, onPreparedness, onContacts }: AdvisoriesProps) {
   const listTitleRef = useRef<HTMLHeadingElement>(null)
   const [selectedFilter, setSelectedFilter] = useState<AdvisoryFilter>('All')
   const [search, setSearch] = useState('')
-  const showingSamples = !loading && advisories.length === 0
-  const availableAdvisories = showingSamples ? sampleAdvisories : advisories
+  const availableAdvisories = loading || error ? [] : advisories.filter(advisory => advisory.isPublished && !advisory.isSample)
   const query = search.trim().toLowerCase()
   const visibleAdvisories = availableAdvisories.filter((advisory) => (
     (selectedFilter === 'All' || advisory.category === selectedFilter)
@@ -58,9 +58,9 @@ export default function Advisories({ advisories, loading, error, onBack, onPrepa
 
       <aside className="advisory-prototype-notice" aria-label="Prototype content notice">
         <FaCircleInfo aria-hidden="true" />
-        <p><strong>{showingSamples ? 'Sample preview — no staff advisory is currently published.' : 'Published prototype advisories.'}</strong>{' '}{showingSamples ? 'These entries demonstrate the page and are not active warnings or official Cainta DRRMO announcements.' : 'Confirm urgent information through official local channels. This is a student prototype.'}</p>
+        <p><strong>Community information.</strong> Confirm urgent information through official local channels. This is a student prototype, not an emergency dispatch service.</p>
       </aside>
-      {error && <p className="form-error" role="alert">Live advisories could not be loaded. Sample entries are shown when available.</p>}
+      {error && <div className="advisory-load-error"><p className="form-error" role="alert">{error}</p><button type="button" className="button button-outline" onClick={onRetry}>Try again <FaArrowRight aria-hidden="true" /></button></div>}
 
       <div className="advisories-layout">
         <div className="advisories-results">
@@ -71,8 +71,8 @@ export default function Advisories({ advisories, loading, error, onBack, onPrepa
             })}</nav>
             <label className="advisory-search"><FaMagnifyingGlass aria-hidden="true" /><span className="sr-only">Search advisories</span><input type="search" placeholder="Search advisories…" value={search} onChange={(event) => setSearch(event.target.value)} /></label>
           </div>
-          <div className="advisory-results-heading"><h2 ref={listTitleRef} tabIndex={-1}>Community updates</h2><p className="advisory-count" role="status" aria-live="polite">{loading ? 'Loading…' : `${visibleAdvisories.length} ${visibleAdvisories.length === 1 ? 'advisory' : 'advisories'} shown`}</p></div>
-          {loading ? <div className="advisory-empty panel" role="status"><FaCloudRain aria-hidden="true" /><p>Loading published advisories…</p></div> : <div className="advisory-list">
+          <div className="advisory-results-heading"><h2 ref={listTitleRef} tabIndex={-1}>Community updates</h2><p className="advisory-count" role="status" aria-live="polite">{loading ? 'Loading…' : error ? 'Updates unavailable' : `${visibleAdvisories.length} ${visibleAdvisories.length === 1 ? 'advisory' : 'advisories'} shown`}</p></div>
+          {loading ? <div className="advisory-empty panel" role="status"><FaCloudRain aria-hidden="true" /><p>Loading published advisories…</p></div> : error ? <div className="advisory-empty panel"><FaCircleInfo aria-hidden="true" /><h3>Unable to check published updates</h3><p>Please try again. This does not mean there are no active warnings. Check official local channels for current information.</p></div> : availableAdvisories.length === 0 ? <div className="advisory-empty panel" role="status"><FaBell aria-hidden="true" /><h3>No published advisories yet</h3><p>Updates will appear here when authorized staff publish them. In the meantime, use the preparedness guide and official local information sources.</p></div> : <div className="advisory-list">
             {visibleAdvisories.length === 0 ? <div className="advisory-empty panel"><FaMagnifyingGlass aria-hidden="true" /><h3>No matching advisories</h3><p>Try a different search or choose another category.</p><button className="text-link" type="button" onClick={() => { setSearch(''); setSelectedFilter('All') }}>Clear filters <FaArrowRight aria-hidden="true" /></button></div> : visibleAdvisories.map((advisory) => {
               const Icon = categoryIcons[advisory.category]
               return <details className="advisory-card panel" key={advisory.id}>

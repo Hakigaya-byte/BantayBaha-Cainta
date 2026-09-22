@@ -1,8 +1,8 @@
 import { FaFileLines, FaBookOpen, FaBullhorn, FaPhone, FaArrowRight, FaCloudRain, FaUsers, FaCircleCheck, FaCalendarDays } from 'react-icons/fa6'
 import type { ActivePage } from './navigation'
-import { sampleAdvisories, type Advisory } from './data/advisories'
+import type { Advisory } from './data/advisories'
 
-type Props = { onNavigate: (page: ActivePage) => void; advisories: Advisory[]; loading: boolean; error: string; signedIn: boolean }
+type Props = { onNavigate: (page: ActivePage) => void; advisories: Advisory[]; loading: boolean; error: string; signedIn: boolean; onRetry: () => void }
 const shortcuts = [
   { icon: FaFileLines, title: 'Submit a Report', text: 'I-report ang baha sa inyong lugar.', page: 'report' },
   { icon: FaBookOpen, title: 'Be Prepared', text: 'Basahin ang mga gabay at tips.', page: 'preparedness' },
@@ -10,8 +10,8 @@ const shortcuts = [
   { icon: FaPhone, title: 'Know Where to Call', text: 'Emergency at barangay contacts.', page: 'emergency-contacts' },
 ] as const
 
-export default function Home({ onNavigate, advisories, loading, error, signedIn }: Props) {
-  const notices = (advisories.length ? advisories : sampleAdvisories).slice(0, 2)
+export default function Home({ onNavigate, advisories, loading, error, signedIn, onRetry }: Props) {
+  const notices = advisories.filter(notice => notice.isPublished && !notice.isSample).slice(0, 2)
   return <>
     <section className="home-hero">
       <div className="container home-hero-inner">
@@ -31,8 +31,7 @@ export default function Home({ onNavigate, advisories, loading, error, signedIn 
         <section className="panel home-advisories">
           <p className="eyebrow">LATEST UPDATES</p>
           <div className="section-heading"><h2>Community advisories</h2><button className="text-link" onClick={() => onNavigate('advisories')}>View all advisories <FaArrowRight /></button></div>
-          {loading ? <p role="status">Loading advisories…</p> : <div className="home-advisory-list">{notices.map(notice => <button type="button" className="home-advisory-row" key={notice.id} onClick={() => onNavigate('advisories')}><span className={`icon-disc ${notice.category === 'Community' ? 'icon-amber' : ''}`}>{notice.category === 'Community' ? <FaBullhorn /> : <FaCloudRain />}</span><span className="home-advisory-copy"><span className="mini-label">{notice.category} {notice.isSample && <b className="sample-badge">SAMPLE</b>}</span><strong>{notice.title}</strong><span>{notice.summary}</span></span><span className="home-advisory-date"><FaCalendarDays />{notice.publishedAt ? new Date(notice.publishedAt).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Date unavailable'}<small>{notice.isSample ? 'Example notice' : 'Published by staff'}</small></span></button>)}</div>}
-          {error && <p className="small-note">Published updates are unavailable. Examples are shown.</p>}
+          {loading ? <p role="status">Loading advisories…</p> : error ? <div><p className="form-error" role="alert">{error}</p><button className="text-link" type="button" onClick={onRetry}>Try again <FaArrowRight /></button></div> : notices.length === 0 ? <div className="home-advisory-empty" role="status"><p>No published advisories yet.</p><small>Staff updates will appear here once published. Check official local channels for current information.</small></div> : <div className="home-advisory-list">{notices.map(notice => <button type="button" className="home-advisory-row" key={notice.id} onClick={() => onNavigate('advisories')}><span className={`icon-disc ${notice.category === 'Community' ? 'icon-amber' : ''}`}>{notice.category === 'Community' ? <FaBullhorn /> : <FaCloudRain />}</span><span className="home-advisory-copy"><span className="mini-label">{notice.category}</span><strong>{notice.title}</strong><span>{notice.summary}</span></span><span className="home-advisory-date"><FaCalendarDays />{notice.publishedAt ? new Date(notice.publishedAt).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Date unavailable'}<small>Published by staff</small></span></button>)}</div>}
         </section>
         <section className="panel home-preparedness">
           <img src="/assets/emergency-kit.png" alt="Emergency backpack, water, flashlight and first-aid kit" />

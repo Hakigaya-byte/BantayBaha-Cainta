@@ -2,6 +2,10 @@
   --navy: #102b55; --blue: #0755b7; --deep-blue: #063d83; --sky: #e7f5ff;
   --yellow: #ffd253; --muted: #4d6789; --line: #d8e8f5; --paper: #fff;
 }
+.home-advisory-empty { padding: 20px 0; color: var(--muted); }
+.home-advisory-empty p { color: var(--navy); font-weight: 600; margin-bottom: 8px; }
+.home-advisory-empty small { font-size: 12px; line-height: 1.6; display: block; }
+.advisory-load-error { margin-block: 15px; }
 .site-shell { min-height: 100vh; display: flex; flex-direction: column; }
 #main-content { flex: 1; }
 .container { width: min(1440px, calc(100% - 80px)); margin-inline: auto; }

@@ -13,12 +13,11 @@ import ResidentLogin from './ResidentLogin'
 import { useAccount } from './useAccount'
 import SiteShell, { PageHero } from './SiteShell'
 import Home from './Home'
-import ResidentHome from './ResidentHome'
 import type { ActivePage } from './navigation'
 import type { Advisory, AdvisoryInput } from './data/advisories'
 import type { FloodReport, FloodReportInput, ReportStatus } from './report'
 import { createFloodReport, subscribeToFloodReports, updateFloodReportStatus } from './firestoreReports'
-import { createAdvisory, deleteAdvisory, subscribeToAdvisories, updateAdvisory } from './firestoreAdvisories'
+import { advisoryLoadError, createAdvisory, deleteAdvisory, subscribeToAdvisories, updateAdvisory } from './firestoreAdvisories'
 
 function App() {
   const [activePage, setActivePage] = useState<ActivePage>('home')
@@ -26,6 +25,7 @@ function App() {
   const [reportState, setReportState] = useState<{ key: string; reports: FloodReport[]; error: string }>({ key: '', reports: [], error: '' })
   const [logoutError, setLogoutError] = useState('')
   const [loggingOut, setLoggingOut] = useState(false)
+  const [advisoryRetry, setAdvisoryRetry] = useState(0)
   const [advisoryState, setAdvisoryState] = useState<{ key: string; advisories: Advisory[]; error: string }>({ key: '', advisories: [], error: '' })
   const uid = currentUser?.uid
   const reportKey = uid && !accountLoading && !accountError ? uid + ':' + isAdmin : ''
@@ -33,7 +33,7 @@ function App() {
   const reportsError = reportKey && reportState.key === reportKey ? reportState.error : ''
   const reportsLoading = Boolean(reportKey) && reportState.key !== reportKey
   const myReports = reports.filter(report => report.residentId === uid)
-  const advisoryKey = isAdmin && uid ? 'staff:' + uid : 'public'
+  const advisoryKey = (isAdmin && uid ? 'staff:' + uid : 'public') + ':' + advisoryRetry
   const advisories = advisoryState.key === advisoryKey ? advisoryState.advisories : []
   const advisoriesError = advisoryState.key === advisoryKey ? advisoryState.error : ''
   const advisoriesLoading = advisoryState.key !== advisoryKey
@@ -41,6 +41,7 @@ function App() {
 
   function navigate(page: ActivePage) { setActivePage(page) }
   function returnToHome() { navigate('home') }
+  function retryAdvisories() { setAdvisoryRetry(attempt => attempt + 1) }
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
@@ -61,7 +62,7 @@ function App() {
     let active = true
     const unsubscribe = subscribeToAdvisories(isAdmin,
       updatedAdvisories => { if (active) setAdvisoryState({ key: advisoryKey, advisories: updatedAdvisories, error: '' }) },
-      () => { if (active) setAdvisoryState({ key: advisoryKey, advisories: [], error: 'Unable to load advisories. Check your connection and Firestore rules.' }) },
+      error => { if (active) setAdvisoryState({ key: advisoryKey, advisories: [], error: advisoryLoadError(error) }) },
     )
     return () => { active = false; unsubscribe() }
   }, [advisoryKey, isAdmin])
@@ -90,7 +91,7 @@ function App() {
     </>
     if (activePage === 'advisories') return <>
       <PageHero eyebrow="COMMUNITY INFORMATION" title="Community Advisories" description="Stay informed with published notices, weather reminders, and preparedness updates from our school prototype." />
-      <Advisories advisories={publishedAdvisories} loading={advisoriesLoading} error={advisoriesError} onBack={returnToHome} onPreparedness={() => navigate('preparedness')} onContacts={() => navigate('emergency-contacts')} />
+      <Advisories advisories={publishedAdvisories} loading={advisoriesLoading} error={advisoriesError} onRetry={retryAdvisories} onBack={returnToHome} onPreparedness={() => navigate('preparedness')} onContacts={() => navigate('emergency-contacts')} />
     </>
     if (activePage === 'emergency-contacts') return <>
       <PageHero eyebrow="EMERGENCY SUPPORT FOR A SAFER CAINTA" title="Emergency Contacts" description="Find emergency services and your barangay's contact numbers. Keep these details handy, especially during heavy rains and floods." />
@@ -108,8 +109,9 @@ function App() {
       if (!isAdmin) return <div className="report-page"><section className="report-form-card"><h1>Staff access required</h1><p>This account has resident access. Staff accounts are assigned by the project administrator.</p><button className="primary-button" onClick={() => navigate('my-reports')}>View my reports</button></section></div>
       return <AdminDashboard key={uid} reports={reports} staffEmail={currentUser.email ?? ''} loading={reportsLoading} error={reportsError} loggingOut={loggingOut} onBack={returnToHome} onLogout={handleLogout} onUpdateStatus={handleStatusUpdate} advisories={advisories} advisoriesLoading={advisoriesLoading} advisoriesError={advisoriesError} onCreateAdvisory={handleCreateAdvisory} onUpdateAdvisory={handleUpdateAdvisory} onDeleteAdvisory={handleDeleteAdvisory} onContacts={() => navigate('emergency-contacts')} onAdvisories={() => navigate('advisories')} />
     }
-    if (currentUser && !isAdmin && !accountLoading && !accountError) return <ResidentHome reports={myReports} loading={reportsLoading} error={reportsError} onNavigate={navigate} />
-    return <Home onNavigate={navigate} advisories={publishedAdvisories} loading={advisoriesLoading} error={advisoriesError} signedIn={Boolean(currentUser)} />
+    // Home stays the same information hub for guests and signed-in residents.
+    // Personal report history belongs in My Reports, not a replacement homepage.
+    return <Home onNavigate={navigate} advisories={publishedAdvisories} loading={advisoriesLoading} error={advisoriesError} onRetry={retryAdvisories} signedIn={Boolean(currentUser)} />
   }
 
   return <SiteShell page={activePage} onNavigate={navigate} userEmail={currentUser?.email} isStaff={isAdmin} accountLoading={accountLoading} loggingOut={loggingOut} onLogout={handleLogout}>

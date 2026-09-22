@@ -4,6 +4,13 @@ import type { Advisory, AdvisoryInput } from './data/advisories'
 
 const advisoriesCollection = collection(db, 'advisories')
 
+export function advisoryLoadError(error: Error): string {
+  const code = 'code' in error ? String(error.code) : ''
+  if (code === 'permission-denied') return 'Published advisories are unavailable because database access is not configured. Please contact the project administrator.'
+  if (code === 'unavailable') return 'Unable to connect to published advisories. Check your connection and try again.'
+  return 'Published advisories could not be loaded. Please try again or check official local channels.'
+}
+
 function dateString(value: unknown): string {
   if (value instanceof Timestamp) return value.toDate().toISOString()
   return typeof value === 'string' ? value : ''
@@ -38,7 +45,11 @@ export function subscribeToAdvisories(
       } as Advisory
     })
     onAdvisoriesChanged(advisories.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)))
-  }, onError)
+  }, error => {
+    // Log the code for diagnosis without logging advisory content or account data.
+    console.error('Advisories subscription failed', { code: error.code })
+    onError(error)
+  })
 }
 
 export async function createAdvisory(input: AdvisoryInput) {

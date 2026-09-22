@@ -28,6 +28,16 @@ Build and lint passed on 21 September 2026. Vite reports a non-blocking bundle-s
 - Validation: production build, Oxlint, 2 form-helper tests, and 23 local security/account/storage tests passed. This is not a live cloud submission or desktop/mobile visual sign-off. User retains manual flow/layout testing as requested.
 - No GitHub push, website deployment, or cloud permission changes.
 
+## Home and live advisory fix — 22 September 2026
+
+- Home now keeps the full information page for both guests and signed-in residents: reporting shortcuts, preparedness, advisory previews, and workflow. Personal report history remains in My Reports. Normal resident login returns Home; login started from Report a Flood still returns to the requested form.
+- Confirmed live advisory failure: the deployed 15 September Firestore rules had no `advisories` permission. On 22 September at 7:27 PM (UTC+8), published the owner-approved advisory-only addition. Published advisories are public; active staff can manage drafts and publishing. The existing `staff` and `floodReports` permissions were preserved exactly. No report records, Storage permissions, or billing were changed.
+- Loading, unavailable, empty, and populated advisory states are separate. Failures offer Try again; sample notices no longer replace missing live data on Home or Advisories. An empty list is not an all-clear or a statement about real-world flood conditions.
+- `firestore.production.rules` records this limited live release; `firebase.production.json` points only to that file. `firestore.rules` / `firebase.json` still include the staged emulator photo feature. **Do not deploy the default rules/config to production until the separate photo rollout is approved.** For an authorized future rules release, review the live baseline first and use `--config firebase.production.json --only firestore:rules --project bantaybaha-cainta`.
+- Checks: build and Oxlint passed; 3 Home/advisory rendering tests, 3 production-rule emulator tests, 6 content tests, and 2 report-helper tests passed. Emulator checks cover public published-only access, staff advisory management, resident isolation, and unchanged report/photo restrictions. React review kept one cleaned-up subscription with an explicit retry key.
+- Existing deployment only: `https://bantay-baha-cainta.vercel.app/`, GitHub `Hakigaya-byte/BantayBaha-Cainta`, production branch `main`. Owner requested the verified fixes be pushed to main for the existing Vercel integration. No new Vercel project or domain.
+- Browser check after the rules publication: the existing site's public Advisories page loads without the previous access-error banner. The frontend update replaces its old sample fallback with the explicit empty state. No live test reports or fake public advisories were created.
+
 ## Simple explanation kay sir
 
 > Ang BantayBaha Cainta po ay web-based prototype para sa flood reporting workflow. Magla-login ang resident, magsa-submit ng report, at makikita niya ang status sa My Reports. Ang authorized staff naman ang nakakakita ng lahat ng reports at puwedeng mag-update ng status. May database rules para hindi mabasa ng isang resident ang report ng ibang account.
@@ -60,15 +70,15 @@ Use sample details only. Kung local emulator ang gamit, `localhost:5174` iyon. A
 
 - Prototype pa lang; hindi official emergency service o automatic rescue dispatch.
 - Optional photo: upload/display code works with local emulators. Live uploads are disabled with a visible notice until the owner approves and configures Firebase Storage; photo selection alone does not upload the file.
-- Staff can create, edit, publish/unpublish, and delete advisories. Sample notices are clearly labeled when no staff notices are available.
+- Staff can create, edit, publish/unpublish, and delete advisories. Public pages display only published notices, or an explicit loading/error/empty state.
 - Contact numbers come from the recorded sources and supplied poster; reconfirm with the relevant office before real-world use.
 - Preparedness content: static summary mula sa PAGASA at Red Cross sources, hindi live updates o official DRRMO-approved guidance.
 - Status ay manual staff update, hindi sensor reading o automatic verification.
-- Wala pang internal notes, public deployment, password reset, o email verification flow.
+- Public deployment is already on the existing Vercel URL. Internal notes, password reset, and email verification remain outside this update.
 - Hindi ibig sabihin ng registration na verified Cainta resident na ang tao.
 
 ## Next step
 
 User reviews the new design on desktop and phone and reports issues with a screenshot and the action taken. Check resident/staff login, report submission/status updates, and the public information pages. No real emergency data during tests.
 
-Start local preview from the project folder with `npm.cmd run dev`. Final design approval comes before deployment. Do not push or deploy until requested.
+Start local preview from the project folder with `npm.cmd run dev`. For this release, the owner authorized pushing the verified changes to `main` for the existing Vercel auto-deployment. Check Home after resident login, Report a Flood, My Reports, and the advisory empty/published states. Use only explicitly labeled demonstration content, not fictional emergency warnings.
