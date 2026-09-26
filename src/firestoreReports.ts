@@ -20,7 +20,7 @@ export async function createFloodReport(input: FloodReportInput): Promise<Create
   const locationDetails = input.locationDetails.trim()
   const description = input.description.trim()
   if (!barangay || !locationDetails || !description) throw new Error('Please fill in all required fields.')
-  if (!validCoordinates(input.coordinates)) throw new Error('Choose and confirm a valid incident location.')
+  if (input.coordinates !== null && !validCoordinates(input.coordinates)) throw new Error('Choose a valid incident location, or skip the map.')
   if (input.photo) {
     const photoError = evidencePhotoError(input.photo)
     if (photoError) throw new Error(photoError)
@@ -30,7 +30,8 @@ export async function createFloodReport(input: FloodReportInput): Promise<Create
   await setDoc(reportReference, {
     barangay, locationDetails, description,
     severity: input.severity,
-    coordinates: input.coordinates,
+    // Rules accept an absent optional location, not a null coordinate object.
+    ...(input.coordinates !== null ? { coordinates: input.coordinates } : {}),
     photoName: '',
     // Keep the initial record compatible with the currently published rules.
     // photoPath is added only after a successful optional upload; reads normalize

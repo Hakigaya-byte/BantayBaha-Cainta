@@ -56,6 +56,14 @@ Build and lint passed on 21 September 2026. Vite reports a non-blocking bundle-s
 4. Staff Dashboard → Show report map → select a pin → View report details. Try the filters above the map.
 5. Old reports without coordinates stay in the table and show no map location.
 
+### Optional map pin — 26 September 2026
+
+- Residents can submit without using the map. Barangay, detailed location, severity, and description remain required.
+- A selected pin still needs confirmation. “Skip map / remove pin” clears the selection, cancels pending device location, and closes the map.
+- Saving without a pin omits `coordinates`, matching the existing production rules. Staff can still read the report's address in the queue; it has no marker on the map.
+- No database permissions or unrelated features changed. Internet is still needed to send the report.
+- Verification: production build and lint passed; 9 focused tests passed (including isolated save-function tests for absent/valid/invalid coordinates). No test reports were sent to production.
+
 ## Simple explanation kay sir
 
 > Ang BantayBaha Cainta po ay web-based prototype para sa flood reporting workflow. Magla-login ang resident, magsa-submit ng report, at makikita niya ang status sa My Reports. Ang authorized staff naman ang nakakakita ng lahat ng reports at puwedeng mag-update ng status. May database rules para hindi mabasa ng isang resident ang report ng ibang account.

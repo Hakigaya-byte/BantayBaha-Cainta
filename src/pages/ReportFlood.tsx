@@ -44,8 +44,8 @@ function ReportFlood({ onBack, onContacts, onMyReports, onSubmitReport }: Report
     event.preventDefault()
     if (submissionLock.current) return
     if (!form.severity) { setSubmitError('Please choose a flood severity.'); return }
-    if (!validCoordinates(form.coordinates) || !locationConfirmed) {
-      setSubmitError('Choose the flood incident location on the map and confirm the pin before submitting.')
+    if (form.coordinates !== null && (!validCoordinates(form.coordinates) || !locationConfirmed)) {
+      setSubmitError('Confirm the selected map pin, or skip the map to submit using your address details.')
       return
     }
     if (!form.barangay.trim() || !form.locationDetails.trim() || !form.description.trim()) {
@@ -156,7 +156,7 @@ function ReportFlood({ onBack, onContacts, onMyReports, onSubmitReport }: Report
         <div className="flood-report-guide-inner">
           <div className="flood-report-guide-heading"><span className="icon-disc"><FaUsers aria-hidden="true" /></span><div><h2 id="report-guide-title">How reporting works</h2><p>A few simple steps.</p></div></div>
           <ol className="flood-report-steps">
-            <li><strong>Fill out the form</strong><p>Provide the address, confirm the incident map pin, and describe the flooding.</p></li>
+            <li><strong>Fill out the form</strong><p>Provide the barangay, detailed location, severity, and description. A map pin is optional; confirm it only if you add one.</p></li>
             <li><strong>Add a photo (optional)</strong><p>A photo provides supporting details. Never put yourself at risk to take one.</p></li>
             <li><strong>Submit your report</strong><p>Check My Reports for its status and updates from authorized staff.</p></li>
           </ol>
