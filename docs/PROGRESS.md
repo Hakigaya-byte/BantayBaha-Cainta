@@ -38,6 +38,24 @@ Build and lint passed on 21 September 2026. Vite reports a non-blocking bundle-s
 - Existing deployment only: `https://bantay-baha-cainta.vercel.app/`, GitHub `Hakigaya-byte/BantayBaha-Cainta`, production branch `main`. Owner requested the verified fixes be pushed to main for the existing Vercel integration. No new Vercel project or domain.
 - Browser check after the rules publication: the existing site's public Advisories page loads without the previous access-error banner. The frontend update replaces its old sample fallback with the explicit empty state. No live test reports or fake public advisories were created.
 
+## Incident maps and optional device location — 26 September 2026
+
+- Report form: choose a manual pin (tap/click, drag, or keyboard map-center control), or request one device location reading. Device permission is requested only after the button is clicked. The resident must confirm the incident pin; no continuous tracking or automatic address/incident verification. Manual coordinates are available if tiles cannot load.
+- New reports save validated latitude, longitude, source, and optional device accuracy in Firestore. Residents see their saved pin in My Reports. Authorized staff can open a private map of all matching reports, use the existing status/barangay/severity filters, and open report details from pins. Reports sharing coordinates share a pin with all their entries. Legacy reports remain explicitly unmapped; nothing is guessed or migrated.
+- Published the approved coordinate-only extension to the live Firebase rules at **10:45 PM (UTC+8), 26 September 2026**. The full live baseline was compared with the repository, and the edited rules matched the emulator-tested production file. Owner/staff read access, staff-only status updates, advisory rules, photo restrictions, and billing remain unchanged. Old clients without coordinates remain accepted for backwards compatibility.
+- Leaflet 1.9.4 loads on demand with OpenStreetMap standard tiles and visible attribution. No API key, geocoding, offline tile download, or billing change. The interface explains that tile viewing sends IP/viewed area to the provider, not report text/account details. OSM tiles are best-effort, not an emergency-service guarantee. Reference: https://operations.osmfoundation.org/policies/tiles/.
+- Checks: build and lint passed; 13 focused rendering/helper tests, 5 production-rules emulator tests, and 23 existing emulator privacy/auth/storage tests passed. Production dependency audit: zero known vulnerabilities; existing dev-tool audit warnings were not blanket-upgraded. Existing main-bundle size warning remains; Leaflet is a separate lazy chunk.
+- Local browser flow verified with disposable emulator accounts: missing-pin validation, manual pin selection, confirmation, save, resident receipt/coordinates, staff map/popup/details, empty filter results, and legacy counts. A narrow layout was checked with no horizontal overflow; a resize-center issue was fixed. No browser console errors observed in the tested flow. Actual phone GPS/permission behavior still needs the user's device test; helper tests cover success, denial, timeout, invalid readings, and late responses after cancellation.
+- React review informed lazy map loading and cleanup of map instances/observers/location callbacks. Deployment uses the existing GitHub main → Vercel connection; no new project/domain. No production test reports were created.
+
+### Quick map demo
+
+1. Resident: Report a Flood → Use my current location (allow permission), or Choose on map.
+2. Move the pin to the incident, confirm the checkbox, complete the report, and submit.
+3. My Reports → expand the report → View location on map.
+4. Staff Dashboard → Show report map → select a pin → View report details. Try the filters above the map.
+5. Old reports without coordinates stay in the table and show no map location.
+
 ## Simple explanation kay sir
 
 > Ang BantayBaha Cainta po ay web-based prototype para sa flood reporting workflow. Magla-login ang resident, magsa-submit ng report, at makikita niya ang status sa My Reports. Ang authorized staff naman ang nakakakita ng lahat ng reports at puwedeng mag-update ng status. May database rules para hindi mabasa ng isang resident ang report ng ibang account.

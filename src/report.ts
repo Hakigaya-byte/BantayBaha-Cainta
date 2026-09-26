@@ -1,3 +1,5 @@
+import type { ReportCoordinates } from './reportLocation'
+
 export type ReportStatus =
   | 'Submitted'
   | 'Under Review'
@@ -13,6 +15,7 @@ export type FloodReportInput = {
   severity: FloodSeverity
   description: string
   photo: File | null
+  coordinates: ReportCoordinates | null
 }
 
 export type FloodReport = Omit<FloodReportInput, 'photo'> & {

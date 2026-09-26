@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { FaFileLines, FaClock, FaShieldHalved, FaCircleCheck, FaLocationDot, FaCalendarDays, FaWater, FaLightbulb, FaArrowRight, FaChevronDown } from 'react-icons/fa6'
 import type { FloodReport, ReportStatus } from './report'
 import ReportEvidence from './ReportEvidence'
+import ReportLocation from './maps/ReportLocation'
 
 type Props = { reports: FloodReport[]; loading: boolean; error: string; onBack: () => void; onReport: () => void }
 const statuses: ReportStatus[] = ['Submitted', 'Under Review', 'Verified', 'Resolved', 'Closed']
@@ -38,7 +39,7 @@ export default function MyReports({ reports, loading, error, onBack, onReport }:
               <span className="report-row-copy"><strong className="report-barangay"><FaLocationDot /> {report.barangay}</strong><span className="report-location">{report.locationDetails}</span><span className="report-excerpt">{report.description}</span><span className="report-row-meta"><span className={'severity-badge severity-' + report.severity.toLowerCase()}><FaWater /> {report.severity}</span><span><FaCalendarDays /> {report.createdAt ? new Date(report.createdAt).toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short' }) : 'Saving…'}</span></span></span>
               <span className={'report-status-panel status-' + statusClass(report.status)}><strong>{report.status === 'Under Review' || report.status === 'Submitted' ? <FaClock /> : <FaCircleCheck />}{report.status}</strong><small>{statusMessages[report.status]}</small></span><FaChevronDown className="report-expand-icon" />
             </summary>
-            <div className="report-expanded"><h3>Incident details</h3><p className="report-description">{report.description}</p><p className="small-note">Report reference: {report.id}</p>{report.photoPath && <ReportEvidence photoName={report.photoName} photoPath={report.photoPath} alt={'Full evidence photo for ' + report.locationDetails} />}{!report.photoPath && report.photoName && <p className="small-note">Legacy filename: {report.photoName}. No stored image is attached.</p>}</div>
+            <div className="report-expanded"><h3>Incident details</h3><p className="report-description">{report.description}</p><p className="small-note">Report reference: {report.id}</p><ReportLocation coordinates={report.coordinates} label={report.locationDetails} />{report.photoPath && <ReportEvidence photoName={report.photoName} photoPath={report.photoPath} alt={'Full evidence photo for ' + report.locationDetails} />}{!report.photoPath && report.photoName && <p className="small-note">Legacy filename: {report.photoName}. No stored image is attached.</p>}</div>
           </details>)}
         </div>}
       </section>

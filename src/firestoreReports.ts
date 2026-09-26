@@ -3,6 +3,7 @@ import { collection, doc, onSnapshot, query, serverTimestamp, setDoc, Timestamp,
 import { deleteObject, ref, uploadBytes } from 'firebase/storage'
 import { auth, db, storage } from './firebase'
 import { evidenceUploadsEnabled } from './reportFeatures'
+import { validCoordinates } from './reportLocation'
 import { evidencePhotoError, type CreateFloodReportResult, type FloodReport, type FloodReportInput, type ReportStatus } from './report'
 
 const reportsCollection = collection(db, 'floodReports')
@@ -19,6 +20,7 @@ export async function createFloodReport(input: FloodReportInput): Promise<Create
   const locationDetails = input.locationDetails.trim()
   const description = input.description.trim()
   if (!barangay || !locationDetails || !description) throw new Error('Please fill in all required fields.')
+  if (!validCoordinates(input.coordinates)) throw new Error('Choose and confirm a valid incident location.')
   if (input.photo) {
     const photoError = evidencePhotoError(input.photo)
     if (photoError) throw new Error(photoError)
@@ -28,6 +30,7 @@ export async function createFloodReport(input: FloodReportInput): Promise<Create
   await setDoc(reportReference, {
     barangay, locationDetails, description,
     severity: input.severity,
+    coordinates: input.coordinates,
     photoName: '',
     // Keep the initial record compatible with the currently published rules.
     // photoPath is added only after a successful optional upload; reads normalize
@@ -99,6 +102,7 @@ export function subscribeToFloodReports(
           createdAt: dateString(data.createdAt),
           photoName: typeof data.photoName === 'string' ? data.photoName : '',
           photoPath: typeof data.photoPath === 'string' ? data.photoPath : '',
+          coordinates: validCoordinates(data.coordinates) ? data.coordinates : null,
         } as FloodReport
       })
       onReportsChanged(reports.sort((a, b) => b.createdAt.localeCompare(a.createdAt)))

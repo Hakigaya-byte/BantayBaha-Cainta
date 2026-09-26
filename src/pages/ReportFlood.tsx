@@ -4,6 +4,8 @@ import { barangayHotlineGroups } from '../data/emergencyContacts'
 import { evidenceUploadsEnabled, evidenceUploadSetupNotice } from '../reportFeatures'
 import { evidencePhotoError, reportSubmissionError, type CreateFloodReportResult, type FloodReportInput, type FloodSeverity } from '../report'
 import './ReportFlood.css'
+import LocationPicker from '../maps/LocationPicker'
+import { validCoordinates } from '../reportLocation'
 
 type ReportFloodProps = {
   onBack: () => void
@@ -12,7 +14,7 @@ type ReportFloodProps = {
   onSubmitReport: (report: FloodReportInput) => Promise<CreateFloodReportResult>
 }
 type FloodReportForm = Omit<FloodReportInput, 'severity'> & { severity: FloodSeverity | '' }
-const emptyForm: FloodReportForm = { barangay: '', locationDetails: '', severity: '', description: '', photo: null }
+const emptyForm: FloodReportForm = { barangay: '', locationDetails: '', severity: '', description: '', photo: null, coordinates: null }
 const severityOptions: FloodSeverity[] = ['Low', 'Medium', 'High']
 
 function ReportFlood({ onBack, onContacts, onMyReports, onSubmitReport }: ReportFloodProps) {
@@ -22,11 +24,12 @@ function ReportFlood({ onBack, onContacts, onMyReports, onSubmitReport }: Report
   const [submitError, setSubmitError] = useState('')
   const [photoError, setPhotoError] = useState('')
   const [draggingPhoto, setDraggingPhoto] = useState(false)
+  const [locationConfirmed, setLocationConfirmed] = useState(false)
   const fileInput = useRef<HTMLInputElement>(null)
   const submissionLock = useRef(false)
   const successHeading = useRef<HTMLHeadingElement>(null)
 
-  function updateField(field: Exclude<keyof FloodReportForm, 'photo' | 'severity'>, value: string) {
+  function updateField(field: Exclude<keyof FloodReportForm, 'photo' | 'severity' | 'coordinates'>, value: string) {
     setForm(current => ({ ...current, [field]: value }))
   }
   function choosePhoto(file: File | null) {
@@ -41,6 +44,10 @@ function ReportFlood({ onBack, onContacts, onMyReports, onSubmitReport }: Report
     event.preventDefault()
     if (submissionLock.current) return
     if (!form.severity) { setSubmitError('Please choose a flood severity.'); return }
+    if (!validCoordinates(form.coordinates) || !locationConfirmed) {
+      setSubmitError('Choose the flood incident location on the map and confirm the pin before submitting.')
+      return
+    }
     if (!form.barangay.trim() || !form.locationDetails.trim() || !form.description.trim()) {
       setSubmitError('Please fill in all required fields with more than spaces.')
       return
@@ -52,6 +59,7 @@ function ReportFlood({ onBack, onContacts, onMyReports, onSubmitReport }: Report
       const result = await onSubmitReport({ ...form, severity: form.severity })
       setSubmission(result)
       setForm(emptyForm)
+      setLocationConfirmed(false)
       requestAnimationFrame(() => {
         successHeading.current?.focus()
         successHeading.current?.scrollIntoView({ block: 'center' })
@@ -101,6 +109,8 @@ function ReportFlood({ onBack, onContacts, onMyReports, onSubmitReport }: Report
               <label htmlFor="locationDetails">Detailed Location <span aria-hidden="true">*</span></label>
               <div className="flood-report-input-icon"><FaRoad aria-hidden="true" /><input id="locationDetails" maxLength={300} value={form.locationDetails} onChange={event => updateField('locationDetails', event.target.value)} placeholder="Street, landmark, or nearby location" required /></div>
             </div>
+            <LocationPicker value={form.coordinates} confirmed={locationConfirmed} disabled={isSubmitting}
+              onChange={coordinates => { setForm(current => ({ ...current, coordinates })); setSubmitError('') }} onConfirm={setLocationConfirmed} />
             <fieldset className="flood-report-severity">
               <legend>Flood Severity <span aria-hidden="true">*</span></legend>
               <div className="flood-report-severity-options">{severityOptions.map(severity => <label key={severity}>
@@ -146,7 +156,7 @@ function ReportFlood({ onBack, onContacts, onMyReports, onSubmitReport }: Report
         <div className="flood-report-guide-inner">
           <div className="flood-report-guide-heading"><span className="icon-disc"><FaUsers aria-hidden="true" /></span><div><h2 id="report-guide-title">How reporting works</h2><p>A few simple steps.</p></div></div>
           <ol className="flood-report-steps">
-            <li><strong>Fill out the form</strong><p>Provide the location, severity, and a brief description.</p></li>
+            <li><strong>Fill out the form</strong><p>Provide the address, confirm the incident map pin, and describe the flooding.</p></li>
             <li><strong>Add a photo (optional)</strong><p>A photo provides supporting details. Never put yourself at risk to take one.</p></li>
             <li><strong>Submit your report</strong><p>Check My Reports for its status and updates from authorized staff.</p></li>
           </ol>

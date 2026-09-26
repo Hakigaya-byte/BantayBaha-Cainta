@@ -81,6 +81,34 @@ test('production: private reports and staff membership permissions remain restri
   await assertFails(deleteDoc(doc(staff, 'floodReports', 'ana-report')))
   await assertFails(setDoc(doc(ana, 'staff', 'ana'), { active: true }))
   await assertFails(getDocs(collection(ana, 'staff')))
-  // Photo rule rollout is deliberately excluded from this advisory-only release.
+  // The coordinate rollout does not enable the future photo rule rollout.
   await assertFails(setDoc(doc(ana, 'floodReports', 'with-photo-path'), { ...report(), photoPath: '' }))
+})
+
+test('production: coordinate schema validates both manual pins and device estimates', async () => {
+  const db = signedIn('ana')
+  const point = { latitude: 14.578, longitude: 121.122, source: 'manual', accuracyMeters: null }
+  for (const [i, coordinates] of [point, { ...point, latitude: 0, longitude: 0 }, { ...point, source: 'device', accuracyMeters: 40 }].entries()) {
+    const ref = doc(db, 'floodReports', 'mapped-' + i)
+    await assertSucceeds(setDoc(ref, { ...report(), coordinates }))
+    assert.deepEqual((await getDoc(ref)).data().coordinates, coordinates)
+  }
+  for (const coordinates of [null, {}, { ...point, latitude: 91 }, { ...point, longitude: 181 }, { ...point, latitude: NaN }, { ...point, longitude: Infinity }, { ...point, latitude: '14.578' }, { ...point, source: 'fake' }, { ...point, accuracyMeters: 2 }, { ...point, source: 'device', accuracyMeters: -1 }, { ...point, source: 'device', accuracyMeters: 20000001 }, { ...point, extra: true }]) {
+    await assertFails(setDoc(doc(db, 'floodReports', 'bad-point'), { ...report(), coordinates }))
+  }
+})
+
+test('production: mapped reports stay private and coordinates cannot be changed after submission', async () => {
+  const point = { latitude: 14.578, longitude: 121.122, source: 'manual', accuracyMeters: null }
+  const ana = signedIn('ana'), staff = signedIn('staff-user')
+  await assertSucceeds(setDoc(doc(ana, 'floodReports', 'mapped'), { ...report(), coordinates: point }))
+  for (const db of [env.unauthenticatedContext().firestore(), signedIn('ben'), signedIn('inactive-staff')]) {
+    await assertFails(getDoc(doc(db, 'floodReports', 'mapped')))
+    await assertFails(getDocs(collection(db, 'floodReports')))
+    await assertFails(setDoc(doc(db, 'floodReports', 'forged'), { ...report(), coordinates: point }))
+  }
+  for (const db of [ana, staff]) await assertFails(updateDoc(doc(db, 'floodReports', 'mapped'), { coordinates: { ...point, latitude: 15 }, updatedAt: serverTimestamp() }))
+  await assertSucceeds(updateDoc(doc(staff, 'floodReports', 'mapped'), { status: 'Verified', updatedAt: serverTimestamp() }))
+  assert.deepEqual((await getDoc(doc(ana, 'floodReports', 'mapped'))).data().coordinates, point)
+  assert.equal((await assertSucceeds(getDocs(collection(staff, 'floodReports')))).size, 2)
 })

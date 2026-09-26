@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { FaArrowLeft, FaArrowRight, FaBullhorn, FaChevronLeft, FaChevronRight, FaCircleCheck, FaCirclePlus, FaClock, FaCloudRain, FaFileLines, FaPhone, FaShieldHalved, FaUsers, FaWater, FaXmark } from 'react-icons/fa6'
 import type { FloodReport, FloodSeverity, ReportStatus } from './report'
 import ReportEvidence from './ReportEvidence'
+import StaffReportMap from './maps/StaffReportMap'
+import ReportLocation from './maps/ReportLocation'
 import AdminAdvisories from './AdminAdvisories'
 import type { Advisory, AdvisoryInput } from './data/advisories'
 import { emergencyContacts } from './data/emergencyContacts'
@@ -124,6 +126,7 @@ export default function AdminDashboard({
             <label>Filter by barangay<select value={barangay} onChange={event => { setBarangay(event.target.value); setPage(1) }}><option value="All">All Barangays</option>{barangays.map(name => <option key={name}>{name}</option>)}</select></label>
             <label>Filter by severity<select value={severity} onChange={event => { setSeverity(event.target.value as 'All' | FloodSeverity); setPage(1) }}><option value="All">All Severities</option>{severities.map(value => <option key={value}>{value}</option>)}</select></label>
           </div>
+          {!loading && !error && <StaffReportMap reports={visibleReports} onSelect={id => { setSelectedId(id); setUpdateError(''); setUpdateNotice('') }} />}
           {updateError && <p className="form-error" role="alert">{updateError}</p>}
           {pendingId ? <p className="staff-update-notice" role="status">Saving report status…</p> : updateNotice && <p className="staff-update-notice" role="status">{updateNotice}</p>}
           {loading ? <div className="empty-reports" role="status">Loading reports…</div> : error ? <p className="form-error" role="alert">{error}</p> : visibleReports.length === 0 ? <div className="empty-reports"><span className="icon-disc"><FaFileLines aria-hidden="true" /></span><h3>{reports.length ? 'No matching reports' : 'No reports submitted yet'}</h3><p>{reports.length ? 'Try another status, barangay, or severity.' : 'Resident reports will appear here when they are submitted.'}</p>{reports.length > 0 && <button className="button button-outline" onClick={resetFilters}>Clear filters</button>}</div> : <>
@@ -167,6 +170,7 @@ export default function AdminDashboard({
       {selectedReport && <><div className="staff-dialog-heading"><div><p className="eyebrow">INCIDENT DETAILS</p><h2 id="staff-detail-title">{selectedReport.barangay}</h2></div><button className="icon-button" aria-label="Close report details" onClick={() => dialogRef.current?.close()}><FaXmark /></button></div>
         <dl className="staff-detail-fields"><div><dt>Report reference</dt><dd>{selectedReport.id}</dd></div><div><dt>Detailed location</dt><dd>{selectedReport.locationDetails}</dd></div><div><dt>Submitted</dt><dd>{reportDate(selectedReport.createdAt)}</dd></div><div><dt>Severity</dt><dd><span className={'severity-badge severity-' + selectedReport.severity.toLowerCase()}>{selectedReport.severity}</span></dd></div></dl>
         <h3>Incident description</h3><p className="report-description">{selectedReport.description}</p>
+        <ReportLocation key={selectedReport.id} coordinates={selectedReport.coordinates} label={selectedReport.locationDetails} />
         {selectedReport.photoPath ? <ReportEvidence photoPath={selectedReport.photoPath} photoName={selectedReport.photoName} alt={'Evidence submitted for ' + selectedReport.locationDetails} /> : <p className="small-note">No stored evidence photo is attached to this report.</p>}
         <label className="staff-detail-status">Update report status<select className={'staff-status-select ' + statusClass(selectedReport.status)} value={selectedReport.status} disabled={Boolean(pendingId)} onChange={event => void changeStatus(selectedReport.id, event.target.value as ReportStatus)}>{statusOptions.map(status => <option key={status}>{status}</option>)}</select></label>
         {updateError && <p className="form-error" role="alert">{updateError}</p>}{pendingId ? <p role="status">Saving status…</p> : updateNotice && <p role="status" className="staff-update-notice">{updateNotice}</p>}

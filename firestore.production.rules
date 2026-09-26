@@ -11,6 +11,16 @@ service cloud.firestore {
       return value is string && value.size() > 0 && value.size() <= maximum
         && value.matches('[\\s\\S]*[^\\s][\\s\\S]*');
     }
+    function validCoordinates(point) {
+      return point is map
+        && point.keys().hasAll(['latitude', 'longitude', 'source', 'accuracyMeters'])
+        && point.keys().hasOnly(['latitude', 'longitude', 'source', 'accuracyMeters'])
+        && point.latitude is number && point.latitude >= -90 && point.latitude <= 90
+        && point.longitude is number && point.longitude >= -180 && point.longitude <= 180
+        && ((point.source == 'manual' && point.accuracyMeters == null)
+          || (point.source == 'device' && point.accuracyMeters is number
+            && point.accuracyMeters >= 0 && point.accuracyMeters <= 20000000));
+    }
     function validAdvisory(data) {
       return data.keys().hasAll(['category', 'title', 'summary', 'isPublished', 'publishedAt', 'createdAt', 'updatedAt'])
         && data.keys().hasOnly(['category', 'title', 'summary', 'isPublished', 'publishedAt', 'createdAt', 'updatedAt'])
@@ -27,7 +37,8 @@ service cloud.firestore {
       allow get, list: if signedIn() && (resource.data.residentId == request.auth.uid || isStaff());
       allow create: if signedIn()
         && request.resource.data.keys().hasAll(['residentId', 'barangay', 'locationDetails', 'severity', 'description', 'photoName', 'status', 'createdAt', 'updatedAt'])
-        && request.resource.data.keys().hasOnly(['residentId', 'barangay', 'locationDetails', 'severity', 'description', 'photoName', 'status', 'createdAt', 'updatedAt'])
+        && request.resource.data.keys().hasOnly(['residentId', 'barangay', 'locationDetails', 'severity', 'description', 'photoName', 'status', 'createdAt', 'updatedAt', 'coordinates'])
+        && (!('coordinates' in request.resource.data) || validCoordinates(request.resource.data.coordinates))
         && request.resource.data.residentId == request.auth.uid
         && validText(request.resource.data.barangay, 100)
         && validText(request.resource.data.locationDetails, 300)
