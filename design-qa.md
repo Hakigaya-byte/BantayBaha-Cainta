@@ -2,6 +2,20 @@
 
 final result: blocked
 
+## Staff advisory editor — 26 September 2026
+
+Source visual truth: the user's attached 1672 × 941 advisory-editor reference in this conversation. This is a scoped redesign of the existing staff editor, not the public Advisories page.
+
+Implemented the pale-blue editor strip, large Manage advisories heading, white create form with equal-width category/title fields, outline library icons, yellow save action, right-hand Draft/Review/Publish guide and tip, and full-width saved-advisories panel with count and focus-form CTA. Existing Inter font and blue/navy/yellow tokens are reused. The reference has standard UI icons only; no raster assets need generation. Existing CRUD callbacks and the public/private database rules are unchanged.
+
+Responsive implementation: form/workflow stack at 1050px; fields stack at 640px, save action fills the card, text inputs use 16px mobile type, and saved-card actions wrap. This is implemented CSS, not a browser-tested responsiveness claim.
+
+Required fidelity surfaces (implementation review only): typography uses Inter with 44px desktop heading / 30px mobile; spacing uses 24px card padding, 22px panel gaps, and approximately 2.55:1 compose columns; colors reuse navy text, pale-blue panels, yellow primary action; all icons use installed icon-library components rather than image placeholders; copy follows the supplied reference and actual database counts/states. Loading and failed reads do not display a false empty count.
+
+Implementation screenshot: not captured. Viewport / density normalization, combined full-view comparison, and focused visual comparison: deferred because the user previously requested to handle manual testing to conserve usage. No P0/P1/P2 visual findings are claimed resolved; no browser comparison iteration occurred. The image-to-code visual gate remains blocked rather than falsely marked passed. Render tests/build/lint are recorded separately, not substituted for visual verification.
+
+Next manual check: staff dashboard → Create / Manage Advisories; compare with the reference on desktop and phone, then try saving a clearly labeled draft and editing/cancelling it. Build, Oxlint, and 3 focused render tests passed. The user subsequently approved pushing this design to main for the existing Vercel website; manual visual QA remains deferred as requested.
+
 ## Reason
 
 The user explicitly took over manual testing and asked the agent to limit work to implementation and compile/lint checks to conserve usage. Accordingly, browser screenshots, flow tests, and desktop/mobile visual comparison were deferred. This is not a claim of visual QA passing.
